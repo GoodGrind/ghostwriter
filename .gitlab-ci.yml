@@ -1,0 +1,44 @@
+before_script:
+  - apt-get update -qq && apt-get install -qq unzip
+  - wget -q https://services.gradle.org/distributions/gradle-2.13-bin.zip
+  - unzip -qq gradle-2.13-bin.zip
+  - export GRADLE_HOME=${PWD}/gradle-2.13
+  - export PATH=${PATH}:${PWD}/gradle-2.13/bin
+
+java_7:
+  stage: test
+  image: java:openjdk-7-jdk
+  script:
+    - gradle check && gradle bootstrap
+  after_script:
+    - mkdir report-v7
+    - cp -r ghostwriter-test-java-v7/build/reports/tests/* report-v7
+    - mkdir test_classes-v7
+    - cp -r ghostwriter-test-java-v7/build/classes/test/* test_classes-v7
+  artifacts:
+    name: "${CI_BUILD_NAME}_${CI_BUILD_REF}"
+    paths:
+      - report-v7/
+      - test_classes-v7
+
+java_8:
+  stage: test
+  image: java:openjdk-8-jdk
+  script:
+    - gradle check && gradle bootstrap
+  after_script:
+    - mkdir report-v7
+    - cp -r ghostwriter-test-java-v7/build/reports/tests/* report-v7
+    - mkdir test_classes-v7
+    - cp -r ghostwriter-test-java-v7/build/classes/test/* test_classes-v7
+    - mkdir report-v8
+    - cp -r ghostwriter-test-java-v8/build/reports/tests/* report-v8
+    - mkdir test_classes-v8
+    - cp -r ghostwriter-test-java-v8/build/classes/test/* test_classes-v8
+  artifacts:
+    name: "${CI_BUILD_NAME}_${CI_BUILD_REF}"
+    paths:
+      - report-v7
+      - report-v8
+      - test_classes-v7
+      - test_classes-v8

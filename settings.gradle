@@ -1,0 +1,13 @@
+include 'ghostwriter-openjdk-v7'
+include 'ghostwriter-test-java-v7'
+
+if (JavaVersion.current().isJava8()) {
+    logger.info "GhostWriter: enabling Java8 based modules!"
+    include 'ghostwriter-openjdk-v8'
+    include 'ghostwriter-test-java-v8'
+}
+else {
+    logger.info "GhostWriter: skipping Java8 based modules!"
+}
+
+rootProject.name = 'ghostwriter'

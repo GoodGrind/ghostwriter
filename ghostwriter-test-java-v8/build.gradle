@@ -1,0 +1,12 @@
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+dependencies {
+    compile "io.ghostwriter:ghostwriter-api-java:${project.ext.ghostwriterApiVersion}"
+
+    testCompile project(":ghostwriter-test-java-v7")
+    testCompile project(":ghostwriter-openjdk-v8")
+
+    compile 'junit:junit:4.12' // we need JUnit during compilation as well since we have some helpers
+}
+

@@ -1,0 +1,13 @@
+dependencies {
+    compile 'junit:junit:4.12'
+    compile "io.ghostwriter:ghostwriter-api-java:${project.ext.ghostwriterApiVersion}"
+    if (JavaVersion.current().isJava7()) {
+        testCompile project(":ghostwriter-openjdk-v7")
+    }
+    if (JavaVersion.current().isJava8()) {
+        testCompile project(":ghostwriter-openjdk-v8")
+    }
+
+    compile 'junit:junit:4.12' // we need JUnit during compilation as well since we have some helpers
+}
+

@@ -1,0 +1,2 @@
+The tools.jar files are manually added to the repository as a dependency. This way it is easier to have reproducible builds.
+Unfortunately the tools.jar files are not available in Maven central, so we'll have to live with this setup.

@@ -1,0 +1,154 @@
+= GhostWriter
+
+:version: 0.1.1
+
+image::src/media/GhostWriterLogo.png[GhostWriter, 125, 125, align="left"]
+
+image:https://gitlab.com/goodgrind/GhostWriter/badges/master/build.svg["Build Status", link="https://gitlab.com/goodgrind/GhostWriter/commits/master"]
+image:https://maven-badges.herokuapp.com/maven-central/io.ghostwriter/ghostwriter-api-java/badge.svg["Maven Central", link="http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22io.ghostwriter%22%20v%3A{version}"]
+image:https://img.shields.io/badge/license-LGPLv2.1-blue.svg?style=flat["License", link="http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html"]
+image:https://api.codacy.com/project/badge/Grade/ced3cbe5b44d4f5bbae39140913a69a4["Codacy Badge", link="https://www.codacy.com/app/snorbi07/GhostWriter"]
+image:https://badges.gitter.im/Join%20Chat.svg["Gitter",link="https://gitter.im/snorbi07/GhostWriter?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge"]
+
+
+== About
+GhostWriter is the tracking/monitoring solution that you've been looking for! You just don't know it yet!
+With only a recompilation, your application will be instrumented with capabilities that provide a way to react to various events,
+such as method invocations, state changes or even unhandled exceptions.
+How these events are handled is up to the runtime component, which opens the door for possibilities.
+During development, you might want a full trace of what and how data passes through your application.
+In production, you can opt for just capturing the application state that led to an unhandled error.
+Or you can provide your own implementation, which is customized to meet your needs.
+All this is provided in a noninvasive way! You don't need to modify your code, you won't get proxy classes or mangled stack traces.
+Trying it out is simply a matter of adding a dependency and a flag to your application.
+
+== Getting started
+
+GhostWriter is divided into two major components. The compile-time module, which is responsible for instrumenting your application
+with the necessary API calls and the runtime modules, which handles the API calls.
+
+=== Compile time module ===
+
+The compile time module is specific to a compiler version. So you have to specify the correct dependency, otherwise your build will fail.
+This means that for JDKv7 you will have to use the _ghostwriter-openjdk-v7_ module and for JDKv8 _ghostwriter-openjdk-v8_.
+There are corresponding sections both for Maven and Gradle to get you started, just check those.
+By default, GhostWriter uses a "no operation" runtime implementation. To add a more concrete functionality, you need to specify a runtime module.
+Check the corresponding section (_Runtime module_) for details.
+
+==== Maven ====
+
+Add another _dependency_ entry to the _dependencies_ section.
+This means that for JDKv7, you will have the following entry in you _pom.xml_ file.
+
+----
+<dependency>
+    <groupId>io.ghostwriter</groupId>
+    <artifactId>ghostwriter-openjdk-v7</artifactId>
+    <version>0.1.0</version>
+    <scope>compile</scope>
+</dependency>
+----
+
+In order to instrument your application, you have to set the compile time annotation processor.
+In Maven this is done by adding the following lines to your _pom.xml_.
+
+----
+<build>
+     <plugins>
+         <plugin>
+             <groupId>org.apache.maven.plugins</groupId>
+             <artifactId>maven-compiler-plugin</artifactId>
+             <version>3.3</version>
+             <executions>
+                 <execution>
+                     <id>default-compile</id>
+                     <phase>compile</phase>
+                     <goals>
+                         <goal>compile</goal>
+                     </goals>
+                     <configuration>
+                         <!-- This is how we enable GhostWriter, the rest is more or less boilerplate of Maven -->
+                         <annotationProcessors>
+                             <annotationProcessor>io.ghostwriter.openjdk.v7.GhostWriterAnnotationProcessor</annotationProcessor>
+                         </annotationProcessors>
+                         <source>1.7</source>
+                         <target>1.7</target>
+                     </configuration>
+                 </execution>
+             </executions>
+        </plugin>
+     </plugins>
+ </build>
+----
+
+The important part is the specification of the annotation processor using the _annotationProcessor_ tag.
+The rest is more or less Maven foreplay.
+
+That is it! Recompile your application and you will have the possibility to capture various events of your application.
+
+=== Gradle ===
+
+The provided snippets work with Gradle 2.x.
+The dependencies of GhostWriter are fetched from Maven Central. So you have to add it to your list of repositories if its not there yet.
+For a project that uses JDKv7, you'll will have to add the following lines to your _build.gradle_ file.
+
+----
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile "io.ghostwriter:ghostwriter-openjdk-v7:0.1.0"
+}
+----
+
+The next step is to specify that the application should be build using the compile time annotation processor provided by GhostWriter.
+In Gradle, that is done by adding the following snippet to your _build.gradle_ file.
+
+----
+compileJava {
+    options.compilerArgs = [
+            // use the GhostWriter preprocessor to compile Java classes
+            "-processor", "io.ghostwriter.openjdk.v7.GhostWriterAnnotationProcessor"
+    ]
+}
+----
+
+To test your changes try recompiling your application. Make sure to recompile everything.
+If it works, then you are all set! Now you just need to pick a runtime module to work with.
+
+=== Runtime module ===
+
+==== Capturing error snapshots ====
+
+Ghostwriter provides a runtime module for capturing information about unhandled errors.
+To use it, you need to add the correct runtime dependencies to your application.
+
+===== Maven =====
+
+----
+    <dependency>
+        <groupId>io.ghostwriter</groupId>
+        <artifactId>ghostwriter-rt-snaperr</artifactId>
+        <version>0.1.0</version>
+        <scope>runtime</scope>
+    </dependency>
+----
+
+===== Gradle =====
+
+----
+dependencies {
+    runtime "io.ghostwriter:ghostwriter-rt-snaperr:0.1.0"
+}
+----
+
+== Development
+
+=== Continuous integration
+The build of GhostWriter is considered stable if all tests pass and if GhostWriter can instrument(compile) itself.
+To test the same locally, just execute the following Gradle tasks:
+
+----
+gradle assemble check bootstrap
+----

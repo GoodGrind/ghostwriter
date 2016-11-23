@@ -1,0 +1,56 @@
+allprojects {
+    apply plugin: 'java'
+
+    sourceCompatibility = 1.7
+    targetCompatibility = 1.7
+
+    group = 'io.ghostwriter'
+    version = "0.3.0"
+
+    // Dependency version information
+    ext.ghostwriterApiVersion = "0.3.0"
+
+    // Maven central related properties
+    ext.doUploadToSonatype = false // can be used at a later stage to disable/enable uploading to Maven Central staging
+    ext.sonatypeUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+    ext.sonatypeUserName = project.hasProperty("sonatypeUserName") ? sonatypeUserName : ""
+    ext.sonatypePassword = project.hasProperty("sonatypePassword") ? sonatypePassword : ""
+
+    // General project information
+    ext.ghostwriterUrl = "http://ghostwriter.io"
+    ext.ghostwriterScm = "scm:git@github.com/snorbi07/GhostWriter"
+    ext.ghostwriterLicense = "GNU Lesser General Public License, version 2.1"
+    ext.ghostwriterLicenseUrl = "http://www.gnu.org/licenses/old-licenses/lgpl-2.1.en.html"
+    ext.ghostwriterDeveloperId = "snorbi07"
+    ext.ghostwriterDeveloperName = "Norbert Sram"
+    ext.ghostwriterDeveloperEmail = ""
+}
+
+subprojects {
+    repositories {
+        jcenter()
+        mavenLocal()
+    }
+
+    test {
+        // show standard out and standard error of the test JVM(s) on the console
+        testLogging.showStandardStreams = true
+    }
+}
+
+task identify {
+    println "  _____ _               ___          __   _ _"
+    println " / ____| |             | \\ \\        / /  (_) |"
+    println "| |  __| |__   ___  ___| |\\ \\  /\\  / / __ _| |_ ___ _ __"
+    println "| | |_ | '_ \\ / _ \\/ __| __\\ \\/  \\/ / '__| | __/ _ \\ '__|"
+    println "| |__| | | | | (_) \\__ \\ |_ \\  /\\  /| |  | | ||  __/ |"
+    println " \\_____|_| |_|\\___/|___/\\__| \\/  \\/ |_|  |_|\\__\\___|_|"
+    println "Using build file '$buildFile.name' in '$buildFile.parentFile.name'."
+    configurations.runtime.each { File f -> println f }
+}
+
+task versionPrint(group: "Versioning", description: "Displays the current configured version of the project") {
+    doLast {
+        logger.quiet "Version: $project.version"
+    }
+}

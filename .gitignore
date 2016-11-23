@@ -1,0 +1,19 @@
+*.class
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+#build dir
+target
+bin
+build
+.gradle
+.classpath
+
+# IDE
+.idea
+*.iml
+.settings
+.project

@@ -1,0 +1,115 @@
+apply plugin: "maven"
+apply plugin: "signing"
+
+ext {
+    annotationProcessor = 'io.ghostwriter.openjdk.v7.GhostWriterAnnotationProcessor'
+}
+
+dependencies {
+    compile "io.ghostwriter:ghostwriter-api-java:${project.ext.ghostwriterApiVersion}"
+    compile files(jar.archivePath) // Dependency for doing the bootstrap build. Contains the annotation processor class
+    compile files("${parent.projectDir}/toolsJar/tools_1.7.0_80-b15.jar")
+}
+
+compileJava {
+    // we need to explicitly disable annotation processing otherwise the service provided by the jar would be loaded
+    options.compilerArgs = [
+            '-proc:none'
+    ]
+}
+
+// We're compiling a release for Java 8, so the META-INF/service folder for Java 7 does not need to be included
+// Otherwise we'll end up with 2 versions of GhostWriter services on the classpath and the Java 7 version will crash in case of a Java 8 compiler.
+if (JavaVersion.current().isJava8()) {
+    jar {
+        exclude("META-INF")
+    }
+}
+
+
+task bootstrap(type: JavaCompile, group: 'build', description: 'Create a  self-instrumented build of GhostWriter', dependsOn: 'jar') {
+    if (JavaVersion.current() != JavaVersion.VERSION_1_7) {
+        enabled = false;
+        logger.error "No JDK7 present! Disabling $project.name bootstrapping!"
+        return
+    }
+
+    source = sourceSets.main.java.srcDirs
+    classpath = sourceSets.main.compileClasspath
+    destinationDir = sourceSets.main.output.classesDir
+    options.compilerArgs = [
+            '-processor', annotationProcessor
+    ]
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from tasks.javadoc.destinationDir
+}
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allSource
+    classifier = 'sources'
+}
+
+artifacts {
+    archives jar
+
+    archives javadocJar
+    archives sourcesJar
+}
+
+signing {
+    required {
+        gradle.taskGraph.hasTask("uploadArchives")
+    }
+
+    sign configurations.archives
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            repository(url: mavenLocal().url)
+
+            if (project.ext.doUploadToSonatype) {
+                repository(url: project.ext.sonatypeUrl) {
+                    authentication(userName: project.ext.sonatypeUserName, password: project.ext.sonatypePassword)
+                }
+            }
+
+            pom.project {
+                name 'GhostWriter'
+                packaging 'jar'
+                description 'Ghostwriter API complie time instrumentation support for Java 7'
+                url project.ext.ghostwriterUrl
+
+                scm {
+                    url project.ext.ghostwriterScm
+                    connection project.ext.ghostwriterUrl
+                    developerConnection project.ext.ghostwriterScm
+                }
+
+                licenses {
+                    license {
+                        name project.ext.ghostwriterLicense
+                        url project.ext.ghostwriterLicenseUrl
+                        distribution 'repo'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id project.ext.ghostwriterDeveloperId
+                        name project.ext.ghostwriterDeveloperName
+                        email project.ext.ghostwriterDeveloperEmail
+                    }
+                }
+
+            }
+        }
+    }
+}
+
