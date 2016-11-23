@@ -1,12 +1,9 @@
 package io.ghostwriter.openjdk.v8.ast.translator;
 
 import com.sun.tools.javac.tree.JCTree;
-import io.ghostwriter.openjdk.v7.ast.collector.Collector;
 import io.ghostwriter.openjdk.v7.ast.compiler.JavaCompiler;
 import io.ghostwriter.openjdk.v7.ast.compiler.JavaCompilerHelper;
 import io.ghostwriter.openjdk.v7.ast.translator.ReturningTranslator;
-
-import java.util.List;
 
 
 public class LambdaAwareReturningTranslator extends ReturningTranslator {

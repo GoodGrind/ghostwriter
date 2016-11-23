@@ -13,7 +13,7 @@ public class TimeoutTest extends TestBase {
         try {
             Thread.sleep(25);
         } catch (InterruptedException e) {
-            throw new RuntimeException(e); // this will cause the test to fail, so we achieve the desired goal
+            throw new IllegalStateException(e); // this will cause the test to fail, so we achieve the desired goal
         }
     }
 
@@ -22,13 +22,13 @@ public class TimeoutTest extends TestBase {
         try {
             Thread.sleep(25);
         } catch (InterruptedException e) {
-            throw new RuntimeException(e); // this will cause the test to fail, so we achieve the desired goal
+            throw new IllegalStateException(e); // this will cause the test to fail, so we achieve the desired goal
         }
     }
 
     @Timeout(threshold = 1000)
     public void underThreshold() {
-        return;
+        // do nothing
     }
 
     @Test

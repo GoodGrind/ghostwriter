@@ -11,16 +11,14 @@ import io.ghostwriter.openjdk.v7.common.Logger;
 import io.ghostwriter.openjdk.v7.model.Method;
 import io.ghostwriter.openjdk.v7.model.Parameter;
 
-import java.util.stream.Collectors;
-
 
 public class LambdaAwareEnteringExitingTranslator extends EnteringExitingTranslator {
+
+    private JCTree.JCLambda visitedLambda = null;
 
     public LambdaAwareEnteringExitingTranslator(JavaCompiler javac, JavaCompilerHelper helper) {
         super(javac, helper);
     }
-
-    private JCTree.JCLambda visitedLambda = null;
 
     @Override
     public void visitLambda(JCTree.JCLambda jcLambda) {

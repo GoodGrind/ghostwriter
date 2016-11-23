@@ -180,6 +180,7 @@ public class ValueChangeTest extends TestBase {
         int a = 3, b = 4, c = 0;
         b = c + 2;
         a = b = c;
+
         return c + a;
     }
 
@@ -436,7 +437,7 @@ public class ValueChangeTest extends TestBase {
         int z = 3;
         int b, c;
         if ((b = a) == 1 || (c = z) == 3) {
-
+            // do nothing here...
         }
         else {
             c = z;
