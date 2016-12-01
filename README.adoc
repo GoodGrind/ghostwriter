@@ -2,7 +2,7 @@
 
 :version: 0.3.0
 
-image:https://gitlab.com/goodgrind/GhostWriter/badges/master/build.svg["Build Status", link="https://gitlab.com/goodgrind/GhostWriter/commits/master"]
+image:https://travis-ci.org/GoodGrind/ghostwriter.svg?branch=master["Build Status", link="https://travis-ci.org/GoodGrind/ghostwriter"]
 image:https://maven-badges.herokuapp.com/maven-central/io.ghostwriter/ghostwriter-api-java/badge.svg["Maven Central", link="http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22io.ghostwriter%22%20v%3A{version}"]
 image:https://img.shields.io/badge/license-LGPLv2.1-blue.svg?style=flat["License", link="http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html"]
 image:https://api.codacy.com/project/badge/Grade/c4506e0b2280433490ec6c23cbb36c0f["Codacy code quality", link="https://www.codacy.com/app/snorbi07/ghostwriter-instrumenter?utm_source=github.com&utm_medium=referral&utm_content=GoodGrind/ghostwriter-instrumenter&utm_campaign=Badge_Grade"]
