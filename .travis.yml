@@ -1,0 +1,11 @@
+language: java 
+os:   
+  - linux 
+  
+jdk:   
+  - oraclejdk7   
+  - openjdk7
+  - oraclejdk8
+
+script: gradle check && gradle bootstrap
+
