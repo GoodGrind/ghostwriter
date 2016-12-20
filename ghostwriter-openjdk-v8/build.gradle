@@ -1,3 +1,6 @@
+plugins {
+    id 'com.github.johnrengelman.shadow' version '1.2.4'
+}
 
 apply plugin: "maven"
 apply plugin: "signing"
@@ -11,14 +14,23 @@ ext {
 
 dependencies {
     compile "io.ghostwriter:ghostwriter-api-java:${project.ext.ghostwriterApiVersion}"
+
     // Dependency for doing the bootstrap build. Contains the annotation processor class
     compile files(jar.archivePath)
+
     // We have to use the jar as a dependency instead of project, otherwise we'll have the Java 7 tools.jar on the classpath
     compile files(project(":ghostwriter-openjdk-v7").jar)
-    compile files("${parent.projectDir}/toolsJar/tools_1.8.0_74.jar")
+
+    // This needs to be added to the 'shadow' configuration in order to exclude it.
+    // We explicitly add it to the classpath later in the 'compileJava' task.
+    // (For details, check: https://github.com/johnrengelman/shadow/issues/142)
+    shadow files("${parent.projectDir}/toolsJar/tools_1.8.0_74.jar")
 }
 
 compileJava {
+    // Explicitly add the compile time dependencies that are excluded because of the shadowJar setup
+    classpath += configurations.shadow
+
     if (JavaVersion.current() != JavaVersion.VERSION_1_8) {
         enabled = false;
         logger.error "No JDK8 configured! Disabling $project.name build!"
@@ -32,9 +44,14 @@ compileJava {
     ]
 }
 
+javadoc {
+    // Explicitly add the compile time dependencies that are excluded because of the shadowJar setup
+    classpath += configurations.shadow
+}
+
 task bootstrap(type: JavaCompile, group: 'build', description: 'Create a  self-instrumented build of GhostWriter', dependsOn: 'jar') {
     if (JavaVersion.current() != JavaVersion.VERSION_1_8) {
-        enabled = false;
+        enabled = false
         logger.error "No JDK8 present! Disabling $project.name bootstrapping!"
         return
     }
@@ -47,6 +64,13 @@ task bootstrap(type: JavaCompile, group: 'build', description: 'Create a  self-i
     ]
 }
 
+shadowJar {
+    classifier = 'bundle'
+    dependencies {
+        // This is a transitive dependency, we only want to have the v7 base in the shadowJar
+        exclude(dependency("io.ghostwriter:ghostwriter-api-java"))
+    }
+}
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
     classifier = 'javadoc'
@@ -59,10 +83,21 @@ task sourcesJar(type: Jar) {
 }
 
 artifacts {
-    archives jar
-
+    archives shadowJar
     archives javadocJar
     archives sourcesJar
+}
+
+// Remove the default JAR artifact that does not bundle the dependencies.
+// Would not hurt to distribute it, however this way we ensure that that bundled one is used
+configurations.archives.artifacts.with { archives ->
+    def jarArtifact
+    archives.each {
+        if (it.type == 'jar' && it.classifier == '') {
+            jarArtifact = it
+        }
+    }
+    remove(jarArtifact)
 }
 
 signing {
@@ -89,7 +124,7 @@ uploadArchives {
             pom.project {
                 name 'GhostWriter'
                 packaging 'jar'
-                description 'Ghostwriter API complie time instrumentation support for Java 7'
+                description 'Ghostwriter API complie-time instrumentation support for Java 8'
                 url project.ext.ghostwriterUrl
 
                 scm {
@@ -118,4 +153,3 @@ uploadArchives {
         }
     }
 }
-
