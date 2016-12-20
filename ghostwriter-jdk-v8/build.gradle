@@ -19,7 +19,7 @@ dependencies {
     compile files(jar.archivePath)
 
     // We have to use the jar as a dependency instead of project, otherwise we'll have the Java 7 tools.jar on the classpath
-    compile files(project(":ghostwriter-openjdk-v7").jar)
+    compile files(project(":ghostwriter-jdk-v7").jar)
 
     // This needs to be added to the 'shadow' configuration in order to exclude it.
     // We explicitly add it to the classpath later in the 'compileJava' task.
