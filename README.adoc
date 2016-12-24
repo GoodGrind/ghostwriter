@@ -29,7 +29,7 @@ _TODO: add before-after picture_
 
 Just add the necessary dependencies to your application and GhostWriter will take care of instrumenting the API (ghostwriter-api) calls.
 *You have to choose the dependency that is inline with your Java complier (JDK) version.*
-For Java 7 this means _ghostwriter-openjdk-v7_, for Java 8 it is _ghostwriter-openjdk-v8_.
+For Java 7 this means _ghostwriter-jdk-v7_, for Java 8 it is _ghostwriter-jdk-v8_.
 
 === Maven
 
@@ -39,13 +39,30 @@ This means that for JDK8, you will have the following entry in you _pom.xml_ fil
 ----
 <dependency>
     <groupId>io.ghostwriter</groupId>
-    <artifactId>ghostwriter-openjdk-v7</artifactId>
+    <artifactId>ghostwriter-jdk-v8</artifactId>
+    <version>0.3.0</version>
+    <scope>compile</scope>
+    <classifier>bundle</classifier>
+</dependency>
+----
+
+Your are done! The bundle contains everything you need. Time to recompile your application!
+
+==== JDK7
+
+In case you are still using Java 7 with JDKv7, use the following dependency.
+
+----
+<dependency>
+    <groupId>io.ghostwriter</groupId>
+    <artifactId>ghostwriter-jdk-v7</artifactId>
     <version>0.3.0</version>
     <scope>compile</scope>
 </dependency>
 ----
 
-Your are done! Time to recompile your application!
+Now recompile your application and if all goes well, you should now have support for plugging in runtime implementations.
+
 
 ==== Explicitly specifying the compile time annotation processor
 This steps should only be done in case you manually set annotation processors.
@@ -86,7 +103,7 @@ The rest is more or less Maven foreplay.
 
 === Gradle ===
 
-The provided snippets work with Gradle 2+.
+The provided snippets work with Gradle 3+.
 The dependencies of GhostWriter are fetched from Maven Central. So you have to add it to your list of repositories if its not there yet.
 For a project that uses JDK8, you'll will have to add the following lines to your _build.gradle_ file.
 
@@ -96,7 +113,7 @@ repositories {
 }
 
 dependencies {
-    compile "io.ghostwriter:ghostwriter-openjdk-v8:0.3.0"
+    compileOnly "io.ghostwriter:ghostwriter-jdk-v8:0.3.0:bundle"
 }
 ----
 
