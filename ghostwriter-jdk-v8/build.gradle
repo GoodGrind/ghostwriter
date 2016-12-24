@@ -58,6 +58,8 @@ task bootstrap(type: JavaCompile, group: 'build', description: 'Create a  self-i
 
     source = sourceSets.main.java.srcDirs
     classpath = sourceSets.main.compileClasspath
+    // Explicitly add the compile time dependencies that are excluded because of the shadowJar setup
+    classpath += configurations.shadow
     destinationDir = sourceSets.main.output.classesDir
     options.compilerArgs = [
             '-processor', annotationProcessor
