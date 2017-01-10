@@ -9,7 +9,7 @@ java_7:
   stage: test
   image: java:openjdk-7-jdk
   script:
-    - gradle check && gradle bootstrap
+    - ./gradlew check && ./gradlew bootstrap
   after_script:
     - mkdir report-v7
     - cp -r ghostwriter-test-java-v7/build/reports/tests/* report-v7
@@ -25,7 +25,7 @@ java_8:
   stage: test
   image: java:openjdk-8-jdk
   script:
-    - gradle check && gradle bootstrap
+    - ./gradlew check && ./gradlew bootstrap
   after_script:
     - mkdir report-v7
     - cp -r ghostwriter-test-java-v7/build/reports/tests/* report-v7
