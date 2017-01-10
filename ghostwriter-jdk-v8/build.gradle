@@ -1,7 +1,3 @@
-plugins {
-    id 'com.github.johnrengelman.shadow' version '1.2.4'
-}
-
 apply plugin: "maven"
 apply plugin: "signing"
 
@@ -12,25 +8,24 @@ ext {
     annotationProcessor = 'io.ghostwriter.openjdk.v8.GhostWriterAnnotationProcessor'
 }
 
+configurations {
+    uberJar
+}
+
 dependencies {
     compile "io.ghostwriter:ghostwriter-api-java:${project.ext.ghostwriterApiVersion}"
 
     // Dependency for doing the bootstrap build. Contains the annotation processor class
-    compile files(jar.archivePath)
+    compileOnly files(jar.archivePath)
 
     // We have to use the jar as a dependency instead of project, otherwise we'll have the Java 7 tools.jar on the classpath
-    compile files(project(":ghostwriter-jdk-v7").jar)
+    compileOnly files(project(":ghostwriter-jdk-v7").jar)
+    uberJar files(project(":ghostwriter-jdk-v7").jar)
 
-    // This needs to be added to the 'shadow' configuration in order to exclude it.
-    // We explicitly add it to the classpath later in the 'compileJava' task.
-    // (For details, check: https://github.com/johnrengelman/shadow/issues/142)
-    shadow files("${parent.projectDir}/toolsJar/tools_1.8.0_74.jar")
+    compileOnly files("${parent.projectDir}/toolsJar/tools_1.8.0_74.jar")
 }
 
 compileJava {
-    // Explicitly add the compile time dependencies that are excluded because of the shadowJar setup
-    classpath += configurations.shadow
-
     if (JavaVersion.current() != JavaVersion.VERSION_1_8) {
         enabled = false;
         logger.error "No JDK8 configured! Disabling $project.name build!"
@@ -44,9 +39,10 @@ compileJava {
     ]
 }
 
-javadoc {
-    // Explicitly add the compile time dependencies that are excluded because of the shadowJar setup
-    classpath += configurations.shadow
+jar {
+    from {
+        configurations.uberJar.collect { it.isDirectory() ? it : zipTree(it) }
+    }
 }
 
 task bootstrap(type: JavaCompile, group: 'build', description: 'Create a  self-instrumented build of GhostWriter', dependsOn: 'jar') {
@@ -58,20 +54,10 @@ task bootstrap(type: JavaCompile, group: 'build', description: 'Create a  self-i
 
     source = sourceSets.main.java.srcDirs
     classpath = sourceSets.main.compileClasspath
-    // Explicitly add the compile time dependencies that are excluded because of the shadowJar setup
-    classpath += configurations.shadow
     destinationDir = sourceSets.main.output.classesDir
     options.compilerArgs = [
             '-processor', annotationProcessor
     ]
-}
-
-shadowJar {
-    classifier = 'bundle'
-    dependencies {
-        // This is a transitive dependency, we only want to have the v7 base in the shadowJar
-        exclude(dependency("io.ghostwriter:ghostwriter-api-java"))
-    }
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
@@ -85,7 +71,7 @@ task sourcesJar(type: Jar) {
 }
 
 artifacts {
-    archives shadowJar
+    archives jar
     archives javadocJar
     archives sourcesJar
 }
