@@ -7,5 +7,5 @@ jdk:
   - openjdk7
   - oraclejdk8
 
-script: gradle check && gradle bootstrap
+script: ./gradlew check && ./gradlew bootstrap
 
