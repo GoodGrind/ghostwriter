@@ -1,7 +1,10 @@
 language: java 
 os:   
   - linux 
-  
+
+env:
+  - GHOSTWRITER_VERBOSE=true
+
 jdk:   
   - oraclejdk7   
   - openjdk7
