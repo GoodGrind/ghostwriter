@@ -8,6 +8,15 @@ public enum Logger {
 
     private static Messager messager;
 
+    private static boolean doVerboseLogging = false;
+
+    static {
+        final String VERBOSE_LOGGING_ENV = "GHOSTWRITER_VERBOSE";
+        final String verboseEnv = System.getenv(VERBOSE_LOGGING_ENV);
+        final boolean doVerbose = Boolean.parseBoolean(verboseEnv);
+        doVerboseLogging = doVerbose;
+    }
+
     private static String format(Class<?> klass, String method, String message) {
         final int INITIAL_CAPACITY = 32;
         StringBuilder sb = new StringBuilder(INITIAL_CAPACITY);
@@ -23,6 +32,10 @@ public enum Logger {
     }
 
     public static void note(Class<?> type, String method, String message) {
+        if (!doVerboseLogging) {
+            return;
+        }
+
         validateState();
         String output = format(type, method, message);
         messager.printMessage(Diagnostic.Kind.NOTE, output);
