@@ -1,12 +1,15 @@
 = GhostWriter
 
-:version: 0.3.0
+:version: 0.3.1
 
 image:https://travis-ci.org/GoodGrind/ghostwriter.svg?branch=master["Build Status", link="https://travis-ci.org/GoodGrind/ghostwriter"]
 image:https://maven-badges.herokuapp.com/maven-central/io.ghostwriter/ghostwriter-api-java/badge.svg["Maven Central", link="http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22io.ghostwriter%22%20v%3A{version}"]
 image:https://img.shields.io/badge/license-LGPLv2.1-blue.svg?style=flat["License", link="http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html"]
 image:https://api.codacy.com/project/badge/Grade/c4506e0b2280433490ec6c23cbb36c0f["Codacy code quality", link="https://www.codacy.com/app/snorbi07/ghostwriter-instrumenter?utm_source=github.com&utm_medium=referral&utm_content=GoodGrind/ghostwriter-instrumenter&utm_campaign=Badge_Grade"]
 image:https://badges.gitter.im/Join%20Chat.svg["Gitter",link="https://gitter.im/snorbi07/GhostWriter?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge"]
+
+
+:toc:
 
 
 == About
@@ -40,17 +43,37 @@ This means that for JDK8, you will have the following entry in you _pom.xml_ fil
 <dependency>
     <groupId>io.ghostwriter</groupId>
     <artifactId>ghostwriter-jdk-v8</artifactId>
-    <version>0.3.0</version>
+    <version>{version}</version>
     <scope>compile</scope>
-    <classifier>bundle</classifier>
 </dependency>
 ----
 
-Your are done! The bundle contains everything you need. Time to recompile your application!
+Your are done! Time to recompile your application!
 
-==== JDK7
+=== Gradle ===
 
-In case you are still using Java 7 with JDKv7, use the following dependency.
+The provided snippets work with Gradle 3+.
+The dependencies of GhostWriter are fetched from Maven Central. So you have to add it to your list of repositories if its not there yet.
+For a project that uses JDK8, you'll will have to add the following lines to your _build.gradle_ file.
+
+----
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compileOnly "io.ghostwriter:ghostwriter-jdk-v8:{version}"
+}
+----
+
+Your are done! Time to recompile your application!
+
+
+==== For older Java versions (Java 7)
+
+If you are still using an older Java/JDK version such as Java 7, you'll need a different set of dependencies.
+
+===== Maven
 
 ----
 <dependency>
@@ -61,12 +84,27 @@ In case you are still using Java 7 with JDKv7, use the following dependency.
 </dependency>
 ----
 
+===== Gradle
+
+----
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compileOnly "io.ghostwriter:ghostwriter-jdk-v7:{version}"
+}
+----
+
+
 Now recompile your application and if all goes well, you should now have support for plugging in runtime implementations.
 
 
-==== Explicitly specifying the compile time annotation processor
-This steps should only be done in case you manually set annotation processors.
+==== Explicitly specifying the compile time annotation
+This steps should only be done in case you manually set annotation processors (for whatever reason).
 By default the compiler should pick up the GhostWriter annotation processor based on the service loader contract.
+
+===== Maven
 To have it explicitly set, you'll need to add the following lines to your _pom.xml_.
 
 ----
@@ -101,28 +139,8 @@ To have it explicitly set, you'll need to add the following lines to your _pom.x
 The important part is the specification of the annotation processor using the _annotationProcessor_ tag.
 The rest is more or less Maven foreplay.
 
-=== Gradle ===
 
-The provided snippets work with Gradle 3+.
-The dependencies of GhostWriter are fetched from Maven Central. So you have to add it to your list of repositories if its not there yet.
-For a project that uses JDK8, you'll will have to add the following lines to your _build.gradle_ file.
-
-----
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    compileOnly "io.ghostwriter:ghostwriter-jdk-v8:0.3.0:bundle"
-}
-----
-
-Your are done! Time to recompile your application!
-
-==== Explicitly specifying the compile time annotation processor
-This steps should only be done in case you manually set annotation processors.
-By default the compiler should pick up the GhostWriter annotation processor based on the service loader contract.
-The next step is to specify that the application should be build using the compile time annotation processor provided by GhostWriter.
+===== Gradle
 In Gradle, that is done by adding the following snippet to your _build.gradle_ file.
 
 ----
@@ -136,19 +154,29 @@ compileJava {
 
 === Is it working?
 
-_TODO: add picture/description on what the user should see. You know... how do we know whether it works?_
+Set the following environmental variable to track what kind of code GhostWriter writes instead of you.
 
+----
+GHOSTWRITER_VERBOSE=true
+----
+
+You should see something like this:
+
+_TODO: add picture/description on what the user should see. You know... how do we know whether it works?_
 
 
 === Runtime module ===
 
 With the no-operations stubs you won't get much benefit from GhostWriter...
 
-TODO
-
 ==== Tracing your application
 
+Check: https://github.com/GoodGrind/ghostwriter-tracer
+
 ==== Capturing error snapshots
+
+TODO
+
 
 === FAQ
 
