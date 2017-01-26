@@ -50,8 +50,7 @@ public class GhostWriterAnnotationProcessor extends AbstractProcessor {
             }
         }
 
-        final boolean doClaimAnnotations = false;
-        return doClaimAnnotations;
+        return false;
     }
 
 }
