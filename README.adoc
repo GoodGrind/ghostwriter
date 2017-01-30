@@ -188,21 +188,21 @@ image::media/verbose.png[ghostwriter verbose output]
 
 As you can see there are a lot of `Note:` outputs that dump the instrumented code.
 
-=== Runtime modules ===
+== Runtime modules ===
 
 With the no-operations stubs you won't get much benefit from GhostWriter, however this is where GhostWriter shines!
 You can leverage one of the multiple runtime implementations available or roll your own!
 
-==== Tracing your application
+=== Tracing your application
 
 Check: https://github.com/GoodGrind/ghostwriter-tracer
 
-==== Capturing error snapshots
+=== Capturing error snapshots
 
 TODO
 
 
-=== FAQ
+== FAQ
 
 ==== What about the performance impact?
 By default GhostWriter uses no-op stubs, so the performance heavily depends on the runtime implementation you use.
