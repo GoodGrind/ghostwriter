@@ -40,9 +40,9 @@ NOTE: You always see and work with your original source. The above picture is ju
 
 == Getting started
 
-Just add the necessary dependencies to your application and GhostWriter will take care of instrumenting the API (ghostwriter-api) calls.
+Just add the necessary dependencies to your application and GhostWriter will take care of instrumenting the https://github.com/GoodGrind/ghostwriter-api[`ghostwriter-api`] calls.
 
-IMPORTANT: You have to choose the dependency that is inline with your Java complier (JDK) version.
+IMPORTANT: You have to choose the dependency that is inline with your Java compiler (JDK) version.
 
 For Java 7 this means `ghostwriter-jdk-v7`, for Java 8 it is `ghostwriter-jdk-v8`.
 
