@@ -89,7 +89,7 @@ Your are done! Time to recompile your application!
 
 If you are still using an older Java/JDK version such as Java 7, you'll need a different set of dependencies.
 
-===== Maven
+.Maven
 
 [source, subs="verbatim,attributes"]
 ----
@@ -102,7 +102,7 @@ If you are still using an older Java/JDK version such as Java 7, you'll need a d
 ----
 <1> Note the use of `ghostwriter-jdk-v7`.
 
-===== Gradle
+.Gradle
 
 [source, subs="verbatim,attributes"]
 ----
@@ -124,7 +124,7 @@ Now recompile your application and if all goes well, you should now have support
 This steps should only be done in case you manually set annotation processors (for whatever reason).
 By default the compiler should pick up the GhostWriter annotation processor based on the service loader contract.
 
-===== Maven
+.Maven
 To have it explicitly set, you'll need to add the following lines to your `pom.xml`.
 
 ----
@@ -161,7 +161,7 @@ The important part is the specification of the annotation processor using the `a
 The rest is more or less Maven foreplay.
 
 
-===== Gradle
+.Gradle
 In Gradle, that is done by adding the following snippet to your `build.gradle` file.
 
 ----
@@ -188,39 +188,39 @@ image::media/verbose.png[ghostwriter verbose output]
 
 As you can see there are a lot of `Note:` outputs that dump the instrumented code.
 
-== Runtime modules ===
+== Runtime modules
 
 With the no-operations stubs you won't get much benefit from GhostWriter, however this is where GhostWriter shines!
 You can leverage one of the multiple runtime implementations available or roll your own!
 
-=== Tracing your application
+.Tracing your application
 
 Check: https://github.com/GoodGrind/ghostwriter-tracer
 
-=== Capturing error snapshots
+.Capturing error snapshots
 
 TODO
 
 
 == FAQ
 
-==== What about the performance impact?
+.What about the performance impact?
 By default GhostWriter uses no-op stubs, so the performance heavily depends on the runtime implementation you use.
 The JVM does an awesome job of optimizing the generated code and the end performance depends on your application behaviour as well.
 In case of performance critical section the instrumentation can be skipped by applying the correct annotation in order to minimize the performance overhead.
 
-==== What about 3rd party code? Will that have the same stubs instrumented?
+.What about 3rd party code? Will that have the same stubs instrumented?
 Only if you compile that yourself. Potentially you can compile your own rt.jar with GhostWriter and have full blown coverage!
 The general consideration with the compile-time instrumenter implementation is that you should focus on the code that is in your control.
 
-==== Will it mess with my stack traces? Like referring to line numbers that do not exist in my original source code?
+.Will it mess with my stack traces? Like referring to line numbers that do not exist in my original source code?
 No. The code instrumenter implementation makes sure that it is non-invasive and your stack traces refer to the correct source lines.
 
-==== Why not a Java agent based solution?
+.Why not a Java agent based solution?
 Implementation details. In the long run both compile-time and run-time implementation will be supported.
 Depending on your use case (library vs. application), you can pick the one that fits your needs.
 The acceptance testing infrastructure is in place for verifying the instrumentation steps, so feel free to contribute a solution ;)
 
-==== Is there a way to dump the instrumented code?
+.Is there a way to dump the instrumented code?
 Yes there is.
 TODO: add instructions...
