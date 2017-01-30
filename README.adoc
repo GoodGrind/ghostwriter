@@ -1,3 +1,11 @@
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+endif::[]
+
 = GhostWriter
 Norbert Sram
 :toc: macro
@@ -147,7 +155,7 @@ To have it explicitly set, you'll need to add the following lines to your `pom.x
      </plugins>
  </build>
 ----
-<1> We explicitly specify to use GhostWriter.
+<1> Make sure to use the correct annotation processor, for Java 7 this would be `io.ghostwriter.openjdk.v7.GhostWriterAnnotationProcessor`
 
 The important part is the specification of the annotation processor using the `annotationProcessor` tag.
 The rest is more or less Maven foreplay.
@@ -160,10 +168,11 @@ In Gradle, that is done by adding the following snippet to your `build.gradle` f
 compileJava {
     options.compilerArgs = [
             // use the GhostWriter preprocessor to compile Java classes
-            "-processor", "io.ghostwriter.openjdk.v8.GhostWriterAnnotationProcessor"
+            "-processor", "io.ghostwriter.openjdk.v8.GhostWriterAnnotationProcessor" // <1>
     ]
 }
 ----
+<1> Make sure to use the correct version, for Java 7 this would be `io.ghostwriter.openjdk.v7.GhostWriterAnnotationProcessor`
 
 === Is it working?
 
