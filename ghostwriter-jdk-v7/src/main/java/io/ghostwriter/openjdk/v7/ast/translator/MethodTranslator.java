@@ -15,20 +15,46 @@ public class MethodTranslator implements Translator<Method> {
     private final JavaCompiler javac;
 
     private final JavaCompilerHelper helper;
-    
+
+    private final boolean doTraceValueChanges;
+
+    private final boolean doTraceErrors;
+
+    private final boolean doTraceReturning;
+
     public MethodTranslator(JavaCompiler javac, JavaCompilerHelper helper) {
         this.javac = Objects.requireNonNull(javac, "Must provide a valid instance of " + JavaCompiler.class.getSimpleName());
         this.helper = Objects.requireNonNull(helper, "Must provide a valid instance of " + JavaCompilerHelper.class.getSimpleName());
+
+        final String DISABLE_VALUE_CHANGE = "GHOSTWRITER_DISABLE_VC";
+        final String disableValueChange = System.getenv(DISABLE_VALUE_CHANGE);
+        doTraceValueChanges = !Boolean.parseBoolean(disableValueChange);
+
+        final String DISABLE_ERROR_TRACKING = "GHOSTWRITER_DISABLE_ERR";
+        final String disableErrorTracking = System.getenv(DISABLE_ERROR_TRACKING);
+        doTraceErrors = !Boolean.parseBoolean(disableErrorTracking);
+
+        final String DISABLE_RETURNING = "GHOSTWRITER_DISABLE_RET";
+        final String disableReturning = System.getenv(DISABLE_RETURNING);
+        doTraceReturning = !Boolean.parseBoolean(disableReturning);
     }
 
     protected boolean doTraceValueChanges() {
-        // Here only for extensibility reasons. Value change tracking feature is optional.
-        return true;
+        return doTraceValueChanges;
     }
 
     protected boolean doTraceErrors() {
-        // Here only for extensibility reasons. Error tracking feature is optional.
+        return doTraceErrors;
+    }
+
+    protected boolean doTraceEnteringExiting() {
+        // not yet supported, since other transaltion steps depend on the method structure created during entering-exiting instrumentation
+        // needs to be extracted out and refactored first.
         return true;
+    }
+
+    protected boolean doTraceReturning() {
+        return doTraceReturning;
     }
 
     protected boolean doCaptureTimeouts(Method model) {
@@ -82,11 +108,15 @@ public class MethodTranslator implements Translator<Method> {
             traceValueChanges(model);
         }
 
-        // modify the method body to have an entering and exiting call triggered 
-        traceEnteringExiting(model);
+        if (doTraceEnteringExiting()) {
+            // modify the method body to have an entering and exiting call triggered
+            traceEnteringExiting(model);
+        }
 
-        // modify the method body to capture return calls
-        traceReturn(model);
+        if (doTraceReturning()) {
+            // modify the method body to capture return calls
+            traceReturn(model);
+        }
 
         // in case of annotated methods, trace timeout events as well
         if (doCaptureTimeouts(model)) {
