@@ -21,7 +21,13 @@ image:https://badges.gitter.im/Join%20Chat.svg["Gitter",link="https://gitter.im/
 toc::[]
 
 
-== About
+= What is GhostWriter?
+GhostWriter helps people to catch, pinpoint and fix bugs quickly without writing any lines of extra code or deploying additional services
+
+== How does it work?
+GhostWriter takes a different approach of debugging and bug tracking by writing code instead of you at the creation of the application. When you launch the GhostWriter-augmented final product it catches unexpected errors, tracks variable states and method calls so you or your team can see what's the problem but more importantly, _why_ is it happening. You can attach any application or tool to the interface of the application and receive the messages that GhostWriter creates.
+
+== Can you give me a more technical description?
 GhostWriter is a non-invasive solution for adding common application event handler stubs to your Java code.
 Essentially what you would end up writing by hand if you would like to have proper tracking of your application workflow.
 After the instrumentation you will have the chance to provide custom handlers for all:
@@ -38,7 +44,7 @@ NOTE: You always see and work with your original source. The above picture is ju
 
 
 
-== Getting started
+= Installation
 
 Just add the necessary dependencies to your application and GhostWriter will take care of instrumenting the https://github.com/GoodGrind/ghostwriter-api[`ghostwriter-api`] calls.
 
@@ -190,21 +196,22 @@ image::media/verbose.png[ghostwriter verbose output]
 
 As you can see there are a lot of `Note:` outputs that dump the instrumented code.
 
-== Runtime modules
+= Getting the data
 
-With the no-operations stubs you won't get much benefit from GhostWriter, however this is where GhostWriter shines!
-You can leverage one of the multiple runtime implementations available or roll your own!
+Enhancing your application with GhostWriter is half the battle. You still need that data after all! With the no-operations stubs you won't get much benefit from GhostWriter, however this is where GhostWriter shines! You can leverage one of the multiple runtime implementations available or roll your own!
 
 *Tracing your application*
 
 Check: https://github.com/GoodGrind/ghostwriter-tracer
+
+TODO: _What does it do?_
 
 *Capturing error snapshots*
 
 TODO
 
 
-== FAQ
+= FAQ
 
 *What about the performance impact?*
 
@@ -231,3 +238,7 @@ The acceptance testing infrastructure is in place for verifying the instrumentat
 
 Yes there is.
 TODO: add instructions...
+
+*Is it working with Android based applications?*
+
+Not yet but it's very high on our priority list because current service based solutions are struggling with this problem.
