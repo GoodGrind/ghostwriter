@@ -4,6 +4,8 @@ import io.ghostwriter.message.EnteringMessage;
 import io.ghostwriter.message.ExitingMessage;
 import io.ghostwriter.message.Message;
 import io.ghostwriter.message.OnErrorMessage;
+import io.ghostwriter.test.MessageSequenceAsserter;
+import io.ghostwriter.test.Parameter;
 import io.ghostwriter.test.TestBase;
 import org.junit.Test;
 
@@ -31,9 +33,9 @@ public class SourceLineMappingTest extends TestBase {
         final StackTraceElement exceptionElementInCalledMethod = stackTrace[0];
         final StackTraceElement exceptionElementInCallerMethod = stackTrace[1];
         // line number where we originally trigger an exception: 'throw new IllegalStateException("Some exception");'
-        final int exceptionSourceLineNumberInCalledMethod = 15;
+        final int exceptionSourceLineNumberInCalledMethod = 17;
         // line number where we indirectly trigger an exception by calling a "faulty" method: 'methodWithAnException();'
-        final int exceptionSourceLineNumberInCallerMethod = 23;
+        final int exceptionSourceLineNumberInCallerMethod = 25;
 
         int lineNumber = exceptionElementInCalledMethod.getLineNumber();
         assertTrue("Exception doesn't refer to trigger line in called method! Expected " + exceptionSourceLineNumberInCalledMethod + ", got: " + lineNumber,
@@ -68,6 +70,48 @@ public class SourceLineMappingTest extends TestBase {
         // verify enteringMessage type
         boolean isEnteringMessage = enteringMessage instanceof EnteringMessage;
         assertTrue("Invalid entering message type: " + enteringMessage.getClass(), isEnteringMessage);
+    }
+
+    @Test
+    public void testReturnExpressionWithException() {
+        final InMemoryTracer inMemoryTracer = fetchedPreparedInMemoryTracer();
+        inMemoryTracer.clearMessages();
+        NullPointerException expectedException = null;
+        try {
+            returnExpressionWithException(23);
+        }
+        catch (NullPointerException npe) {
+            expectedException = npe;
+        }
+
+        assertTrue("Expected exception not caught!", expectedException != null);
+        MessageSequenceAsserter.messageSequence()
+                .entering("returnExpressionWithException", new Parameter<>("someInt", 23))
+                .onError("returnExpressionWithException", NullPointerException.class)
+                .exiting("returnExpressionWithException")
+                .empty();
+
+        final StackTraceElement[] stackTrace = expectedException.getStackTrace();
+        final StackTraceElement exceptionElementInCalledMethod = stackTrace[0];
+        final StackTraceElement exceptionElementInCallerMethod = stackTrace[1];
+
+        // line number where we originally trigger an exception: 'null.toString();'
+        final int exceptionSourceLineNumberInCalledMethod = 114;
+        // line number where we indirectly trigger an exception by calling a "faulty" method: 'returnExpressionWithException(23);'
+        final int exceptionSourceLineNumberInCallerMethod = 81;
+
+        int lineNumber = exceptionElementInCalledMethod.getLineNumber();
+        assertTrue("Exception doesn't refer to trigger line in called method! Expected " + exceptionSourceLineNumberInCalledMethod + ", got: " + lineNumber,
+                lineNumber == exceptionSourceLineNumberInCalledMethod);
+
+        lineNumber = exceptionElementInCallerMethod.getLineNumber();
+        assertTrue("Exception doesn't refer to trigger line in caller method! Expected " + exceptionSourceLineNumberInCallerMethod + ", got: " + lineNumber,
+                lineNumber == exceptionSourceLineNumberInCallerMethod);
+    }
+
+    public String returnExpressionWithException(Integer someInt) {
+        String a = null;
+        return a.toString();
     }
 
 }
