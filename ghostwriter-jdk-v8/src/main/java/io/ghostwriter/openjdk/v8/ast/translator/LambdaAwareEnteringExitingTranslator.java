@@ -22,6 +22,11 @@ public class LambdaAwareEnteringExitingTranslator extends EnteringExitingTransla
 
     @Override
     public void visitLambda(JCTree.JCLambda jcLambda) {
+        if (!Lambdas.doInstrumentLambdas()) {
+            super.visitLambda(jcLambda);
+            return;
+        }
+
         final boolean isLambdaBodyWrappedInBlock = jcLambda.body instanceof JCTree.JCBlock;
         if (!isLambdaBodyWrappedInBlock) {
             throw new IllegalStateException("Lambda does not have a body, got: " + jcLambda.body.getClass() + "," + jcLambda.toString());

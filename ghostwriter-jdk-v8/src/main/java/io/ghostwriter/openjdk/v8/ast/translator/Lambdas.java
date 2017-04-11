@@ -27,4 +27,10 @@ class Lambdas {
         return sb.toString();
     }
 
+    static boolean doInstrumentLambdas() {
+        // disabled for now since it is quite buggy...
+        System.out.println("#### SHITSONFIREYO");
+        return false;
+    }
+
 }

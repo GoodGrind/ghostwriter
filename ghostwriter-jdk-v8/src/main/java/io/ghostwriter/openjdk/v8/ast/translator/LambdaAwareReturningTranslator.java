@@ -16,20 +16,21 @@ public class LambdaAwareReturningTranslator extends ReturningTranslator {
 
     @Override
     public void visitLambda(JCTree.JCLambda jcLambda) {
+        if (!Lambdas.doInstrumentLambdas()) {
+            result = jcLambda;
+            return;
+        }
 
-        result = jcLambda;
-//        FIXME(snorbi07): temporarily disabled until lambda support is fixed
-//
-//        final boolean isLambdaBodyWrappedInBlock = jcLambda.body instanceof JCTree.JCBlock;
-//        if (!isLambdaBodyWrappedInBlock) {
-//            throw new IllegalStateException("Lambda does not have a body, got: " + jcLambda.body.getClass() + "," + jcLambda.toString());
-//            // we run the LambdaAwareWrapInBlockTranslator to ensure that all lambdas have a body block.
-//            // it that is not the case there is an error somewhere else!
-//        }
-//
-//        visitedLambda = jcLambda;
-//        super.visitLambda(jcLambda);
-//        visitedLambda = null;
+        final boolean isLambdaBodyWrappedInBlock = jcLambda.body instanceof JCTree.JCBlock;
+        if (!isLambdaBodyWrappedInBlock) {
+            throw new IllegalStateException("Lambda does not have a body, got: " + jcLambda.body.getClass() + "," + jcLambda.toString());
+            // we run the LambdaAwareWrapInBlockTranslator to ensure that all lambdas have a body block.
+            // it that is not the case there is an error somewhere else!
+        }
+
+        visitedLambda = jcLambda;
+        super.visitLambda(jcLambda);
+        visitedLambda = null;
     }
 
     @Override

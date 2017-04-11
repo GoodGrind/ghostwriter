@@ -16,7 +16,7 @@ public class LambdaAwareWrapInBlockTranslator extends WrapInBlockTranslator {
     @Override
     public void visitLambda(JCTree.JCLambda jcLambda) {
         final boolean isLambdaExpression = BodyKind.EXPRESSION.equals(jcLambda.getBodyKind());
-        if (isLambdaExpression) {
+        if (isLambdaExpression && Lambdas.doInstrumentLambdas()) {
             // in case the lambda body is a single expression, we need to wrap it in a return statement
             final JCTree body = jcLambda.body;
             final JCTree.JCExpression bodyExpression = (JCTree.JCExpression) body;

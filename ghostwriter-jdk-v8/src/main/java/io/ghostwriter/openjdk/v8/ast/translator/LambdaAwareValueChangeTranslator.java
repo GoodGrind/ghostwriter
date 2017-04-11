@@ -19,9 +19,23 @@ public class LambdaAwareValueChangeTranslator extends ValueChangeTranslator {
 
     @Override
     public void visitLambda(JCTree.JCLambda jcLambda) {
+        // we capture the traversed lambda regardless whether lambda instrumentation is turned on or not
+        // since this is the only way we know that we are inside a JCBlock in a lambda expression
+
         visitedLambda = jcLambda;
         super.visitLambda(jcLambda);
         visitedLambda = null;
+    }
+
+    @Override
+    public void visitBlock(JCTree.JCBlock block) {
+        // we always capture value changes in a block if we are not traversing a lambda (visitedLambda == null)
+        // otherwise this is the place where we have to decide to instrument lambdas or not
+        if (visitedLambda == null || Lambdas.doInstrumentLambdas()) {
+            super.visitBlock(block);
+            return;
+        }
+        result = block;
     }
 
     @Override
