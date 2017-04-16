@@ -38,8 +38,7 @@ public class ValueChangeTranslator extends TreeTranslator implements Translator<
     @Override
     public void visitBlock(JCTree.JCBlock block) {
         //  We have to hijack during block visiting, since this is where we can append instructions for value tracking.
-        // The tree traversal API only allows in-place replacement (for example what we do for return statements).
-        // At least I did not find a way for it...
+        // The tree traversal API only allows in-place replacement
         captureValueChanges(block);
         super.visitBlock(block);
         result = block;
@@ -127,6 +126,14 @@ public class ValueChangeTranslator extends TreeTranslator implements Translator<
         // Skip nested anonymous inner class expressions when collecting assignment statements.
         // Annotation class processor is called separately for anonymous inner classes as well
         result = tree;
+    }
+
+    @Override
+    public void visitClassDef(JCTree.JCClassDecl jcClassDecl) {
+        // Skip nested class declarations. Since we iterate through all classes those are processed later as well.
+        // If we don't skip it at this stage it will be processed twice.
+        // TIL that you can define a named class in a method...
+        result = jcClassDecl;
     }
 
     private void captureValueChanges(JCTree.JCBlock block) {

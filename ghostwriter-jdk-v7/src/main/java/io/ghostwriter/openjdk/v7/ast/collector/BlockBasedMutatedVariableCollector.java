@@ -100,6 +100,12 @@ public class BlockBasedMutatedVariableCollector extends Collector<JCTree.JCExpre
     }
 
     @Override
+    public void visitClassDef(JCTree.JCClassDecl jcClassDecl) {
+        // Skip nested class definitions, those are traversed separately.
+        result = jcClassDecl;
+    }
+
+    @Override
     public void visitVarDef(JCTree.JCVariableDecl variableDecl) {
         JCTree.JCExpression initializer = variableDecl.getInitializer();
         boolean isDeclarationOnly = initializer == null;

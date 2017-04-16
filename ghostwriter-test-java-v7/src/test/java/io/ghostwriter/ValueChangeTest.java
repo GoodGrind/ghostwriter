@@ -8,6 +8,7 @@ import org.junit.Test;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import static org.junit.Assert.assertTrue;
@@ -645,6 +646,41 @@ public class ValueChangeTest extends TestBase {
         int index = 0;
         array[index += 1] = 3;
         array[index -= 1] = 4;
+    }
+
+    static <T> Comparator<T> withNestedClassDefinition() {
+        class SomeNestedClass implements Comparator<T> {
+            T holder = null;
+
+            public void accept(T t) {
+                this.holder = t;
+            }
+
+            @Override
+            public int compare(T t, T t1) {
+                holder = t;
+                return 0;
+            }
+        }
+
+        return new SomeNestedClass();
+    }
+
+    @Test
+    public void testWithNestedClassDefinition() {
+        fetchedPreparedInMemoryTracer();
+        enableValueChangeTracking();
+        withNestedClassDefinition().compare(1, 2);
+        disableValueChangeTracking();
+        MessageSequenceAsserter.messageSequence()
+                .entering("withNestedClassDefinition")
+                .any() // returning from withNestedClassDeifition with a new instance
+                .exiting("withNestedClassDefinition")
+                .entering("compare", new Parameter<>("t", 1), new Parameter<>("t1", 2))
+                .valueChange("compare", "holder", 1)
+                .returning("compare", 0)
+                .exiting("compare")
+                .empty();
     }
 
 }
