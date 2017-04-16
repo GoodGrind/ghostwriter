@@ -55,4 +55,24 @@ public class ReturningTest extends TestBase {
                 .empty();
     }
 
+    public boolean multipleReturnsInStatement(int n) {
+        if (n > 5)
+            return true;
+        else
+            return false;
+    }
+
+    @Test
+    public void testMultipleReturnsInStatement() {
+        final InMemoryTracer inMemoryTracer = fetchedPreparedInMemoryTracer();
+        inMemoryTracer.disableEnteringExitingTracking();
+        inMemoryTracer.clearMessages();
+        multipleReturnsInStatement(4);
+        multipleReturnsInStatement(6);
+        MessageSequenceAsserter.messageSequence()
+                .returning("multipleReturnsInStatement", false)
+                .returning("multipleReturnsInStatement", true)
+                .empty();
+    }
+
 }
