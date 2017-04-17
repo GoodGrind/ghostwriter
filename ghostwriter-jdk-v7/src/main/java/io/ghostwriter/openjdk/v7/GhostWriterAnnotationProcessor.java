@@ -15,6 +15,10 @@ import java.util.Set;
 @SupportedSourceVersion(SourceVersion.RELEASE_7)
 public class GhostWriterAnnotationProcessor extends AbstractProcessor {
 
+    // part of the Annotation processor API. Since GhostWriter just hijacks the processor pipeline
+    // we take care not to claim any annotations and thus always return false.
+    protected static boolean NO_ANNOTATIONS_CLAIMED = false;
+
     private Instrumenter instrumenter;
 
     public GhostWriterAnnotationProcessor(Instrumenter instrumenter) {
@@ -38,7 +42,12 @@ public class GhostWriterAnnotationProcessor extends AbstractProcessor {
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
         if (roundEnv.processingOver()) {
-            return true;
+            return NO_ANNOTATIONS_CLAIMED;
+        }
+
+        if (!doInstrument()) {
+            Logger.note(getClass(), "process", "skipping processing...");
+            return NO_ANNOTATIONS_CLAIMED;
         }
 
         Logger.note(getClass(), "process", "starting processing...");
@@ -50,8 +59,13 @@ public class GhostWriterAnnotationProcessor extends AbstractProcessor {
             }
         }
 
-        final boolean doClaimAnnotations = false;
-        return doClaimAnnotations;
+        return NO_ANNOTATIONS_CLAIMED;
+    }
+
+    protected boolean doInstrument() {
+        final String ENV_VALUE_CHANGE = "GHOSTWRITER_INSTRUMENT";
+        final String envInstrument = System.getenv(ENV_VALUE_CHANGE);
+        return envInstrument == null ? true : Boolean.parseBoolean(envInstrument);
     }
 
 }

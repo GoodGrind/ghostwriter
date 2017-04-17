@@ -26,17 +26,20 @@ public class MethodTranslator implements Translator<Method> {
         this.javac = Objects.requireNonNull(javac, "Must provide a valid instance of " + JavaCompiler.class.getSimpleName());
         this.helper = Objects.requireNonNull(helper, "Must provide a valid instance of " + JavaCompilerHelper.class.getSimpleName());
 
-        final String DISABLE_VALUE_CHANGE = "GHOSTWRITER_DISABLE_VC";
-        final String disableValueChange = System.getenv(DISABLE_VALUE_CHANGE);
-        doTraceValueChanges = !Boolean.parseBoolean(disableValueChange);
+        final String ENV_VALUE_CHANGE = "GHOSTWRITER_TRACE_VALUE_CHANGE";
+        final String envValueChange = System.getenv(ENV_VALUE_CHANGE);
+        doTraceValueChanges = envValueChange == null ? true : Boolean.parseBoolean(envValueChange);
+        Logger.note(getClass(), "<init>", "instrument value change tracing: " + doTraceValueChanges);
 
-        final String DISABLE_ERROR_TRACKING = "GHOSTWRITER_DISABLE_ERR";
-        final String disableErrorTracking = System.getenv(DISABLE_ERROR_TRACKING);
-        doTraceErrors = !Boolean.parseBoolean(disableErrorTracking);
+        final String ENV_ON_ERROR = "GHOSTWRITER_TRACE_ON_ERROR";
+        final String envTraceError = System.getenv(ENV_ON_ERROR);
+        doTraceErrors = envTraceError == null ? true : Boolean.parseBoolean(envTraceError);
+        Logger.note(getClass(), "<init>", "instrument value error tracing: " + doTraceErrors);
 
-        final String DISABLE_RETURNING = "GHOSTWRITER_DISABLE_RET";
-        final String disableReturning = System.getenv(DISABLE_RETURNING);
-        doTraceReturning = !Boolean.parseBoolean(disableReturning);
+        final String ENV_RETURNING = "GHOSTWRITER_TRACE_RETURNING";
+        final String envReturning = System.getenv(ENV_RETURNING);
+        this.doTraceReturning = envReturning == null ? true : Boolean.parseBoolean(envReturning);
+        Logger.note(getClass(), "<init>", "instrument method returning tracing: " + doTraceReturning);
     }
 
     protected boolean doTraceValueChanges() {
