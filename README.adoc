@@ -205,6 +205,7 @@ appropriate environmental variable otherwise stick to the annotations provided b
 [width="100%",frame="topbot",options="header"]
 |=======
 |Instrumentation task|Description|Environmental variable|Default value
+|Logging|Log the exact steps GhostWriter does to your application along with the pretty printed instrumented code|_GHOSTWRITER_VERBOSE_|_false_
 |Overall instrumentation|Disable or enable the code instrumentation during compile time|_GHOSTWRITER_INSTRUMENT_|_true_
 |Entering and exiting|Event for entering and exiting a method|Not yet supported|_true_
 |Returning|Event for returning a value from a function|_GHOSTWRITER_TRACE_RETURNING_|_true_
