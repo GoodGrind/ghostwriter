@@ -100,7 +100,7 @@ public class ReturningTranslator extends TreeTranslator implements Translator<Me
     protected JCTree.JCVariableDecl captureNestedReturnValue(JCTree.JCReturn returnStatement) {
         final String resultVariableName = resultVariableName(returnStatement);
         final JCTree.JCVariableDecl captureVar =
-                    javac.finalVariable(resultType(), resultVariableName, returnStatement.expr, enclosingMethod.representation());
+                    javac.finalVariable(resultType(), resultVariableName, returnStatement.expr, returnStatement);
         return captureVar;
     }
 
