@@ -18,6 +18,8 @@ public class JavaCompilerHelper {
 
     private static final String TIMEOUT_ANNOTATION_TYPE = "io.ghostwriter.annotation.Timeout";
 
+    private static final String INCLUDE_ANNOTATION_TYPE = "io.ghostwriter.annotation.Include";
+
     private final JavaCompiler javac;
 
     public JavaCompilerHelper(JavaCompiler javac) {
@@ -79,8 +81,18 @@ public class JavaCompilerHelper {
         return findFirstAnnotation(annotations, EXCLUDE_ANNOTATION_TYPE);
     }
 
+    private static JCTree.JCAnnotation getIncludeAnnotation(JCTree.JCClassDecl classDecl) {
+        List<JCTree.JCAnnotation> annotations = classDecl.mods.annotations;
+
+        return findFirstAnnotation(annotations, INCLUDE_ANNOTATION_TYPE);
+    }
+
     public boolean isExcluded(JCTree.JCClassDecl classDecl) {
         return getExcludeAnnotation(classDecl) != null;
+    }
+
+    public boolean isIncluded(JCTree.JCClassDecl classDecl) {
+        return getIncludeAnnotation(classDecl) != null;
     }
 
     private static JCTree.JCAnnotation getExcludeAnnotation(JCTree.JCMethodDecl methodDecl) {
@@ -89,8 +101,18 @@ public class JavaCompilerHelper {
         return findFirstAnnotation(annotations, EXCLUDE_ANNOTATION_TYPE);
     }
 
+    private static JCTree.JCAnnotation getIncludeAnnotation(JCTree.JCMethodDecl methodDecl) {
+        List<JCTree.JCAnnotation> annotations = methodDecl.mods.annotations;
+
+        return findFirstAnnotation(annotations, INCLUDE_ANNOTATION_TYPE);
+    }
+
     public boolean isExcluded(JCTree.JCMethodDecl methodDecl) {
         return getExcludeAnnotation(methodDecl) != null;
+    }
+
+    public boolean isIncluded(JCTree.JCMethodDecl methodDecl) {
+        return getIncludeAnnotation(methodDecl) != null;
     }
 
     private static JCTree.JCAnnotation getExcludeAnnotation(JCTree.JCVariableDecl variableDecl) {

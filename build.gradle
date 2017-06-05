@@ -5,10 +5,10 @@ allprojects {
     targetCompatibility = 1.7
 
     group = 'io.ghostwriter'
-    version = "0.4.0"
+    version = "0.5.0"
 
     // Dependency version information
-    ext.ghostwriterApiVersion = "0.3.1"
+    ext.ghostwriterApiVersion = "0.4.0"
 
     // Maven central related properties
     ext.doUploadToSonatype = false // can be used at a later stage to disable/enable uploading to Maven Central staging

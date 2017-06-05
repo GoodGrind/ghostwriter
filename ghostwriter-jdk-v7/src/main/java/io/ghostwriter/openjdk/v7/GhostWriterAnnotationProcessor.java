@@ -63,8 +63,8 @@ public class GhostWriterAnnotationProcessor extends AbstractProcessor {
     }
 
     protected boolean doInstrument() {
-        final String ENV_VALUE_CHANGE = "GHOSTWRITER_INSTRUMENT";
-        final String envInstrument = System.getenv(ENV_VALUE_CHANGE);
+        final String ENV_INSTRUMENT = "GHOSTWRITER_INSTRUMENT";
+        final String envInstrument = System.getenv(ENV_INSTRUMENT);
         return envInstrument == null ? true : Boolean.parseBoolean(envInstrument);
     }
 

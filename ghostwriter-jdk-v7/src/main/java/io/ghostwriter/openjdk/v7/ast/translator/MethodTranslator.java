@@ -22,6 +22,8 @@ public class MethodTranslator implements Translator<Method> {
 
     private final boolean doTraceReturning;
 
+    private final boolean isAnnotatedOnlyMode;
+
     public MethodTranslator(JavaCompiler javac, JavaCompilerHelper helper) {
         this.javac = Objects.requireNonNull(javac, "Must provide a valid instance of " + JavaCompiler.class.getSimpleName());
         this.helper = Objects.requireNonNull(helper, "Must provide a valid instance of " + JavaCompilerHelper.class.getSimpleName());
@@ -40,6 +42,11 @@ public class MethodTranslator implements Translator<Method> {
         final String envReturning = System.getenv(ENV_RETURNING);
         this.doTraceReturning = envReturning == null ? true : Boolean.parseBoolean(envReturning);
         Logger.note(getClass(), "<init>", "instrument method returning tracing: " + doTraceReturning);
+
+        final String ENV_ANNOTATED_ONLY = "GHOSTWRITER_ANNOTATED_ONLY";
+        final String envAnnotatedOnly = System.getenv(ENV_ANNOTATED_ONLY);
+        isAnnotatedOnlyMode = envAnnotatedOnly == null ? false : Boolean.parseBoolean(envAnnotatedOnly);
+        Logger.note(getClass(), "<init>", "annotated only mode enabled: " + isAnnotatedOnlyMode);
     }
 
     protected boolean doTraceValueChanges() {
@@ -67,9 +74,13 @@ public class MethodTranslator implements Translator<Method> {
         return timeoutAnnotation != null;
     }
 
+    protected boolean isAnnotatedOnlyMode() {
+        return isAnnotatedOnlyMode;
+    }
+
     /**
      * After instrumentation, the method will have a structure like one presented here:
-     *
+     * <p>
      * GW.enteringStatement(...)
      * try {
      * ... original method body
@@ -92,6 +103,12 @@ public class MethodTranslator implements Translator<Method> {
         boolean isExcluded = isMethodExcluded(model);
         if (isExcluded) {
             Logger.note(getClass(), "translate", "skipping instrumentation of method: " + model.getName());
+            return;
+        }
+
+        // in case we are running in 'instrument annotated only mode' we only continue if the enclosing class or method is annotated
+        if (isAnnotatedOnlyMode() && !isIncludedClassOrMethod(model)) {
+            Logger.note(getClass(), "translate", "skipping un-annotated method: " + model.getName());
             return;
         }
 
@@ -206,6 +223,12 @@ public class MethodTranslator implements Translator<Method> {
 
     protected JavaCompilerHelper getHelper() {
         return helper;
+    }
+
+    public boolean isIncludedClassOrMethod(Method model) {
+        final JCMethodDecl method = model.representation();
+        final JCTree.JCClassDecl clazz = model.getClazz().representation();
+        return helper.isIncluded(clazz) || helper.isIncluded(method);
     }
 
 }
