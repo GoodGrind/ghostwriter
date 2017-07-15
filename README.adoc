@@ -84,7 +84,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly "io.ghostwriter:ghostwriter-jdk-v8:{version}"
+    compile "io.ghostwriter:ghostwriter-jdk-v8:{version}"
 }
 ----
 
@@ -117,7 +117,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly "io.ghostwriter:ghostwriter-jdk-v7:{version}" // <1>
+    compile "io.ghostwriter:ghostwriter-jdk-v7:{version}" // <1>
 }
 ----
 <1> Note the use of `ghostwriter-jdk-v7`
