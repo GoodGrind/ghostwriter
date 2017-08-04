@@ -22,7 +22,14 @@ toc::[]
 
 
 = What is GhostWriter?
-GhostWriter helps people to catch, pinpoint and fix bugs quickly without writing any lines of extra code or deploying additional services
+GhostWriter helps people to reason about their application, catch and pinpoint bugs quickly without writing any lines of extra code or deploying additional services
+
+*Tracing your application flow*
+image:https://asciinema.org/a/132098.png["Tracer in action", link="https://asciinema.org/a/132098"]
+
+*Providing better exceptions*
+
+Coming soon...
 
 == How does it work?
 GhostWriter takes a different approach of debugging and bug tracking by writing code instead of you at the creation of the application. When you launch the GhostWriter-augmented final product it catches unexpected errors, tracks variable states and method calls so you or your team can see what's the problem but more importantly, _why_ is it happening. You can attach any application or tool to the interface of the application and receive the messages that GhostWriter creates.
@@ -295,15 +302,11 @@ class BestClassEver {
 
 Enhancing your application with GhostWriter is half the battle. You still need that data after all! With the no-operations stubs you won't get much benefit from GhostWriter, however this is where GhostWriter shines! You can leverage one of the multiple runtime implementations available or roll your own!
 
-*Tracing your application*
+*https://github.com/GoodGrind/ghostwriter-tracer[Tracing your application]* - for the times when you don't have your handy debugger at your disposal and you want to find out exactly what is going on in you application.
 
-Check: https://github.com/GoodGrind/ghostwriter-tracer
+*https://github.com/GoodGrind/ghostwriter-snaperr[Capturing error snapshots]* - giving you better exceptions by providing the exact and detailed application state that led to the unexpected error and thus helping you battle https://en.wikipedia.org/wiki/Heisenbug[Heisenbugs]!
 
-TODO: _What does it do?_
-
-*Capturing error snapshots*
-
-TODO
+*https://github.com/GoodGrind/ghostwriter-api[Do whatever you want!]* - provide your own solution for handling the data you get!
 
 = FAQ
 
