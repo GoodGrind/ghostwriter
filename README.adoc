@@ -25,11 +25,15 @@ toc::[]
 GhostWriter helps people to reason about their application, catch and pinpoint bugs quickly without writing any lines of extra code or deploying additional services
 
 *Tracing your application flow*
+
+See GhostWriter with the tracer runtime in action:
 image:https://asciinema.org/a/132098.png["Tracer in action", link="https://asciinema.org/a/132098"]
 
 *Providing better exceptions*
 
-Coming soon...
+Providing a snapshot of the application state alongside the stacktrace for those pesky bugs:
+
+Screencast and extended documentation coming soon...
 
 == How does it work?
 GhostWriter takes a different approach of debugging and bug tracking by writing code instead of you at the creation of the application. When you launch the GhostWriter-augmented final product it catches unexpected errors, tracks variable states and method calls so you or your team can see what's the problem but more importantly, _why_ is it happening. You can attach any application or tool to the interface of the application and receive the messages that GhostWriter creates.
@@ -205,6 +209,16 @@ image::media/verbose.png[ghostwriter verbose output]
 
 As you can see there are a lot of `Note:` outputs that dump the instrumented code.
 
+= Selecting a runtime handler
+
+Enhancing your application with GhostWriter is half the battle. You still need that data after all! With the no-operations stubs you won't get much benefit from GhostWriter, however this is where GhostWriter shines! You can leverage one of the multiple runtime implementations available or roll your own!
+
+*https://github.com/GoodGrind/ghostwriter-tracer[Tracing your application]* - for the times when you don't have your handy debugger at your disposal and you want to find out exactly what is going on in you application.
+
+*https://github.com/GoodGrind/ghostwriter-snaperr[Capturing error snapshots]* - giving you better exceptions by providing the exact and detailed application state that led to the unexpected error and thus helping you battle https://en.wikipedia.org/wiki/Heisenbug[Heisenbugs]!
+
+*https://github.com/GoodGrind/ghostwriter-api[Do whatever you want!]* - provide your own solution for handling the data you get!
+
 = Controlling instrumentation
 In some cases you might be inclined to change the default behaviour of the instrumentation steps.
 Currently there are 2 ways to do this. If you want to disable an instrumentation steps for you entire project, use the
@@ -300,15 +314,16 @@ class BestClassEver {
 }
 ```
 
-= Getting the data
+= Contributing
+First and foremost thank you for putting in the effort and time that is needed to contribute!
 
-Enhancing your application with GhostWriter is half the battle. You still need that data after all! With the no-operations stubs you won't get much benefit from GhostWriter, however this is where GhostWriter shines! You can leverage one of the multiple runtime implementations available or roll your own!
+For smaller changes, just create a pull request and make sure that the automated tests still pass and that your changes are inline with the code quality checks. Providing additional documentation and test coverage is always welcome!
 
-*https://github.com/GoodGrind/ghostwriter-tracer[Tracing your application]* - for the times when you don't have your handy debugger at your disposal and you want to find out exactly what is going on in you application.
+For bigger changes (API, new features, ...) consider opening an issue first so it can be discussed.
 
-*https://github.com/GoodGrind/ghostwriter-snaperr[Capturing error snapshots]* - giving you better exceptions by providing the exact and detailed application state that led to the unexpected error and thus helping you battle https://en.wikipedia.org/wiki/Heisenbug[Heisenbugs]!
+= Getting help
 
-*https://github.com/GoodGrind/ghostwriter-api[Do whatever you want!]* - provide your own solution for handling the data you get!
+If you have a quick question or stumble upon a bug feel free to open an issue or ask on Gitter.
 
 = FAQ
 
@@ -338,9 +353,10 @@ The acceptance testing infrastructure is in place for verifying the instrumentat
 
 *Is there a way to dump the instrumented code?*
 
-Yes there is.
-TODO: add instructions...
+Yes there is!
+If you add the _-printsource_ flag to the _javac_ call, instead of compiling your application, it will print the instrumented sources.
+Check the https://github.com/GoodGrind/ghostwriter/blob/master/sample/README.md[sample application README] for a small example.
 
 *Is it working with Android based applications?*
 
-Not yet but it's very high on our priority list because current service based solutions are struggling with this problem.
+Not yet but it's very high on our priority list!

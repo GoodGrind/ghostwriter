@@ -32,3 +32,10 @@ echo "... then running it with the GhostWriter Tracer runtime..."
 java -cp bin/:bin/ghostwriter-api-java.jar:bin/ghostwriter-rt-tracer.jar io.ghostwriter.sample.fizzbuzz.FizzBuzz 0 10
 echo "Without chaning the application we have fine-grained logging when we need it!" 
 ```
+
+### Print the generated source
+With the _-printsource_ flag instead of compiling the instrumented code, _javac_ will print it out.
+```
+javac -printsource -d bin/ -cp bin/ghostwriter-jdk-v8.jar:bin/ghostwriter-api-java.jar src/main/java/io/ghostwriter/sample/fizzbuzz/FizzBuzz.java 
+```
+
