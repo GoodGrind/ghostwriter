@@ -323,7 +323,7 @@ For bigger changes (API, new features, ...) consider opening an issue first so i
 
 = Getting help
 
-If you have a quick question or stumble upon a bug feel free to open an issue or ask on Gitter.
+If you have a quick question or stumble upon a bug feel free to open an issue or ask on https://gitter.im/snorbi07/GhostWriter[Gitter].
 
 = FAQ
 
