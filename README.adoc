@@ -61,6 +61,8 @@ For Java 7 this means `ghostwriter-jdk-v7`, for Java 8 it is `ghostwriter-jdk-v8
 
 GhostWriter is tested and verified with both Oracle JDK and Open JDK versions.
 
+For detailed instructions keep reading on, if you just want to have a quick overview on a working sample, https://github.com/GoodGrind/ghostwriter/tree/master/sample[check here].
+
 === Maven
 
 Add another `dependency` entry to the `dependencies` section.
