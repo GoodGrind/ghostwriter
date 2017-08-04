@@ -1,0 +1,76 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>io.ghostwriter.sample.fizzbuzz</groupId>
+    <artifactId>fizzbuzz</artifactId>
+    <version>1.0</version>
+    <packaging>jar</packaging>
+
+    <name>FizzBuzz sample application</name>
+    <url>ghostwriter.io</url>
+
+    <!-- In order to get started with GhostWriter, the following dependencies are required -->
+    <dependencies>
+        <!--
+         To get started with GhostWriter, you need to reference and use the compile-time dependency that contains the preprocessor and the standard API
+         The preprocessor instruments the use of the GhostWriter API into your application.
+         -->
+        <dependency>
+            <groupId>io.ghostwriter</groupId>
+            <artifactId>ghostwriter-jdk-v8</artifactId>
+            <version>0.5.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <!--
+         In order to actually capture and use the events that GhostWriter triggers a runtime implementation needs to be provided.
+         The GhostWriter stub check the classpath for TracerProvider implementations. GhostWriter will use the first one it finds.
+         If no implementation was found on the classpath, the default no-op will be used.
+         -->
+        <dependency>
+            <groupId>io.ghostwriter</groupId>
+            <artifactId>ghostwriter-rt-tracer</artifactId>
+            <version>0.3.1</version>
+            <scope>runtime</scope>
+        </dependency>
+    </dependencies>
+
+    <!-- Make sure that the correct Java version is used/targeted -->
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.3</version>
+                <executions>
+                    <execution>
+                        <id>default-compile</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                        <configuration>
+                            <source>1.8</source>
+                            <target>1.8</target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!--
+             This is here for the sake of completion.
+             This makes it possible to execute the sample application using the command:
+             mvn exec:java -Dorg.slf4j.simpleLogger.defaultLogLevel=trace
+            -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.4.0</version>
+                <configuration>
+                    <mainClass>io.ghostwriter.sample.fizzbuzz.FizzBuzz</mainClass>
+                </configuration>
+            </plugin>
+
+        </plugins>
+    </build>
+</project>
