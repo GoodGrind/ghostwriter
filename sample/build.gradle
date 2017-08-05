@@ -23,6 +23,10 @@ jar {
     }
 }
 
+run {
+	args = [0, 10]
+}
+
 // Trace level setting required in order to see the output from GhostWriter
 applicationDefaultJvmArgs = ["-Dorg.slf4j.simpleLogger.defaultLogLevel=trace"]
 mainClassName = "io.ghostwriter.sample.fizzbuzz.FizzBuzz"
