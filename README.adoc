@@ -360,3 +360,10 @@ Check the https://github.com/GoodGrind/ghostwriter/blob/master/sample/README.md[
 *Is it working with Android based applications?*
 
 Not yet but it's very high on our priority list!
+
+*I put the tracer related jars into my application's classpath, yet they are ignored and noop is selected, why?*
+
+Ghostwriter uses the Java ServiceLoader to find the tracer implementation. In ghostwriter-api 0.4.0, ghostwriter-tracer 0.3.1 and earlier versions
+the default context classloader of the current thread was used. In some cases it was not set, and the system classloader
+was used as a fallback, which most probably did not contain the tracer jars (one example is when the application is deployed as a war into a Wildfly server).
+This behaviour is changed, and now it uses the classloader which loaded the Ghostwriter api classes.
