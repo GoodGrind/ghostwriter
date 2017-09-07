@@ -50,6 +50,10 @@ public class InMemoryTracer implements Tracer {
         return messageStack.size();
     }
 
+    public Queue<Message<?>> getMessages() {
+        return messageStack;
+    }
+
     @Override
     public void entering(Object source, String method, Object... params) {
         if (!doTrackEnteringExiting) {

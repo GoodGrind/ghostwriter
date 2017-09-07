@@ -20,6 +20,7 @@ public class Javac8Instrumenter extends Javac7Instrumenter {
         final Javac javac8 = new Javac(processingEnv);
         setJavac(javac8);
         setJavacHelper(new JavaCompilerHelper(javac8));
+        initializeExcludedNames(processingEnv);
     }
 
     @Override
