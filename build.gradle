@@ -36,6 +36,12 @@ subprojects {
         // show standard out and standard error of the test JVM(s) on the console
         testLogging.showStandardStreams = true
     }
+
+    afterEvaluate {
+        tasks.withType(JavaCompile) {
+            options.compilerArgs.addAll(["-AGHOSTWRITER_EXCLUDE=some.package,io.ghostwriter.excluded,io.ghostwriter.ExcludedByEnvironmentClass"]);
+        }
+    }
 }
 
 task identify {
