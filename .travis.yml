@@ -6,9 +6,8 @@ env:
   - GHOSTWRITER_VERBOSE=true
 
 jdk:   
-  - oraclejdk7   
   - openjdk7
   - oraclejdk8
 
-script: gradle check && gradlew bootstrap
+script: ./gradlew check && ./gradlew bootstrap
 
