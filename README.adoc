@@ -265,6 +265,22 @@ subprojects {
 
 The fine grained instrumentation control is achieved using the annotations provided by the `ghostwriter-api` module.
 
+=== Exclude an entire class
+If you have a class, which you don't want to trace at all, just put the `@Exclude` annotation on the class declaration itself.
+This signals to GhostWriter that all methods should be skipped. Usually you would do this for classes that handle sensitive
+information.
+```
+@Exclude
+public class ExcludedTopLevelClass {
+
+    // this method won't be traced
+    public int meaningOfLife() {
+        return 42;
+    }
+
+}
+```
+
 === Exclude an entire method
 By putting the `@Exclude` annotation on a method GhostWriter completely skips it.
 Primary use case is to exclude the performance sensitive methods of the application.
