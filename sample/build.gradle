@@ -9,7 +9,7 @@ repositories {
 dependencies {
     // To get started with GhostWriter, you need to reference and use the compile-time dependency that contains the preprocessor and the standard API
     // The preprocessor instruments the use of the GhostWriter API into your application.
-    compile "io.ghostwriter:ghostwriter-jdk-v8:0.5.1"
+    compile "io.ghostwriter:ghostwriter-jdk-v8:0.6.0"
 
     // In order to actually capture and use the events that GhostWriter triggers a runtime implementation needs to be provided.
     // The GhostWriter stub check the classpath for TracerProvider implementations. GhostWriter will use the first one it finds.
