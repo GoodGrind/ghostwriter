@@ -34,7 +34,7 @@ public class Javac7Instrumenter implements Instrumenter {
     private JavaCompiler javac;
     private JavaCompilerHelper javacHelper;
     private boolean isAnnotatedOnlyMode;
-    private final Set<String> excludedNames = new HashSet<>();
+    private final Set<String> excludedClasses = new HashSet<>();
     private final Set<String> excludedMethodNames = new HashSet<>();
     private static final List<String> DEFAULT_EXCLUDED_METHODS = Collections.unmodifiableList(Arrays.asList("toString", "equals", "hashCode", "compareTo"));
 
@@ -47,28 +47,28 @@ public class Javac7Instrumenter implements Instrumenter {
     }
 
     protected void initializeFromEnv(ProcessingEnvironment processingEnv) {
-        initializeExcludedNames(processingEnv);
+        initializeExcludedClasses(processingEnv);
         initializeExcludedMethodNames(processingEnv);
         initializeAnnotationOnlyMode(processingEnv);
     }
 
-    protected void initializeExcludedNames(ProcessingEnvironment processingEnv) {
-        final String ENV_EXCLUDE_PACKAGES = "GHOSTWRITER_EXCLUDE";
-        String excludedNames = processingEnv.getOptions().get(ENV_EXCLUDE_PACKAGES);
-        if (excludedNames == null) {
-            excludedNames = System.getenv(ENV_EXCLUDE_PACKAGES);
+    protected final void initializeExcludedClasses(ProcessingEnvironment processingEnv) {
+        final String envExcludes = "GHOSTWRITER_EXCLUDE";
+        String rawExcludedNames = processingEnv.getOptions().get(envExcludes);
+        if (rawExcludedNames == null) {
+            rawExcludedNames = System.getenv(envExcludes);
         }
-        if (excludedNames != null) {
-            for (String excludedName : excludedNames.split("[\\s,]+")) {
+        if (rawExcludedNames != null) {
+            for (String excludedName : rawExcludedNames.split("[\\s,]+")) {
                 if (excludedName.endsWith(".*")) { // exclusion of a package or of internal classes
-                    this.excludedNames.add(excludedName.substring(0,excludedName.length()-2));
+                    excludedClasses.add(excludedName.substring(0,excludedName.length()-2));
                 }
                 else {
-                    this.excludedNames.add(excludedName);
+                    excludedClasses.add(excludedName);
                 }
             }
         }
-        Logger.note(getClass(),"initializeExcludedNames","GHOSTWRITER_EXCLUDE initialized to "+ this.excludedNames);
+        Logger.note(getClass(),"initializeExcludedNames","GHOSTWRITER_EXCLUDE initialized to "+ this.excludedClasses);
     }
 
     protected final void initializeExcludedMethodNames(ProcessingEnvironment processingEnv) {
@@ -99,11 +99,11 @@ public class Javac7Instrumenter implements Instrumenter {
     }
 
     private String getExclusionRule(String qualifiedName) {
-        if (excludedNames.isEmpty()) {
+        if (excludedClasses.isEmpty()) {
             return null;
         }
 
-        while (!excludedNames.contains(qualifiedName)) {
+        while (!excludedClasses.contains(qualifiedName)) {
             int lastDot = qualifiedName.lastIndexOf('.');
             if (lastDot <= 0) {
                 return  null;
