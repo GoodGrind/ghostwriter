@@ -1,3 +1,13 @@
+plugins {
+    id 'org.unbroken-dome.test-sets' version '1.4.2'
+}
+
+// testing groups for defining custom compiler arguments for each one separately
+testSets {
+    customMethodExcludeTest
+    emtpyMethodExcludeTest
+}
+
 dependencies {
     compile 'junit:junit:4.12'
     compile "io.ghostwriter:ghostwriter-api-java:${project.ext.ghostwriterApiVersion}"
@@ -11,3 +21,12 @@ dependencies {
     compile 'junit:junit:4.12' // we need JUnit during compilation as well since we have some helpers
 }
 
+compileCustomMethodExcludeTestJava {
+    options.compilerArgs << '-AGHOSTWRITER_EXCLUDE_METHODS=equals,dummy'
+}
+compileEmtpyMethodExcludeTestJava {
+    options.compilerArgs << '-AGHOSTWRITER_EXCLUDE_METHODS=""'
+}
+
+check.dependsOn customMethodExcludeTest
+check.dependsOn emtpyMethodExcludeTest
