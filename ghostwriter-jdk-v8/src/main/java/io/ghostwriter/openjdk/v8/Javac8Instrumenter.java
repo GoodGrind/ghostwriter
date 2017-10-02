@@ -3,13 +3,12 @@ package io.ghostwriter.openjdk.v8;
 import com.sun.source.util.Trees;
 import io.ghostwriter.openjdk.v7.Javac7Instrumenter;
 import io.ghostwriter.openjdk.v7.ast.compiler.JavaCompilerHelper;
-import io.ghostwriter.openjdk.v7.ast.translator.MethodTranslator;
+import io.ghostwriter.openjdk.v7.ast.translator.Translator;
 import io.ghostwriter.openjdk.v7.model.Method;
 import io.ghostwriter.openjdk.v8.ast.compiler.Javac;
 import io.ghostwriter.openjdk.v8.ast.translator.LambdaAwareMethodTranslator;
 
 import javax.annotation.processing.ProcessingEnvironment;
-import java.util.List;
 
 
 public class Javac8Instrumenter extends Javac7Instrumenter {
@@ -20,14 +19,11 @@ public class Javac8Instrumenter extends Javac7Instrumenter {
         final Javac javac8 = new Javac(processingEnv);
         setJavac(javac8);
         setJavacHelper(new JavaCompilerHelper(javac8));
-        initializeExcludedNames(processingEnv);
+        initializeFromEnv(processingEnv);
     }
 
     @Override
-    protected void instrumentMethods(List<Method> methodModels) {
-        MethodTranslator mt = new LambdaAwareMethodTranslator(getJavac(), getJavacHelper());
-
-        methodModels.stream().forEach(mt::translate);
+    protected Translator<Method> getMethodTranslator() {
+        return new LambdaAwareMethodTranslator(getJavac(), getJavacHelper());
     }
-
 }
