@@ -43,7 +43,7 @@ GhostWriter is a non-invasive solution for adding common application event handl
 Essentially what you would end up writing by hand if you would like to have proper tracking of your application workflow.
 After the instrumentation you will have the chance to provide custom handlers for all:
 
-* method calls, including entering, return and exiting events
+* method calls, including entering, return and exiting events (some methods are excluded by default, see <<env-v>> and <<method-exl>>)
 * state changes of your application, such as value assignment and other side-effectful operations
 * unexpected errors
 
