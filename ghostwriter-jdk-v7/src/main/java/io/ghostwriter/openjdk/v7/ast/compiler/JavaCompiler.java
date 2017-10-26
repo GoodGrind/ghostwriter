@@ -195,4 +195,6 @@ public interface JavaCompiler {
     JCExpression castToType(JCTree returnType, JCExpression expression);
 
     JCArrayAccess arrayAccess(JCExpression indexed, JCExpression index);
+
+    String getOption(String option);
 }

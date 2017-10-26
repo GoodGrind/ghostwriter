@@ -10,13 +10,6 @@ public enum Logger {
 
     private static boolean doVerboseLogging = false;
 
-    static {
-        final String VERBOSE_LOGGING_ENV = "GHOSTWRITER_VERBOSE";
-        final String verboseEnv = System.getenv(VERBOSE_LOGGING_ENV);
-        final boolean doVerbose = Boolean.parseBoolean(verboseEnv);
-        doVerboseLogging = doVerbose;
-    }
-
     private static String format(Class<?> klass, String method, String message) {
         final int INITIAL_CAPACITY = 32;
         StringBuilder sb = new StringBuilder(INITIAL_CAPACITY);
@@ -60,11 +53,12 @@ public enum Logger {
         messager.printMessage(Diagnostic.Kind.ERROR, output);
     }
 
-    public static void initialize(Messager msg) {
+    public static void initialize(Messager msg, boolean verbose) {
         if (msg == null) {
             throw new IllegalArgumentException("Cannot initialize with null!");
         }
         messager = msg;
+        doVerboseLogging = verbose;
     }
 
     private static void validateState() {

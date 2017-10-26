@@ -15,12 +15,14 @@ import io.ghostwriter.openjdk.v7.common.Logger;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.type.TypeKind;
+import java.util.Map;
 
 public class Javac implements JavaCompiler {
 
     protected final TreeMaker make;
     protected final JavacElements elements;
     protected final Context context;
+    private final Map<String, String> options;
 
     public Javac(ProcessingEnvironment env) {
         if (env == null) {
@@ -29,6 +31,7 @@ public class Javac implements JavaCompiler {
                     + " instance!");
         }
 
+        options = env.getOptions();
         JavacProcessingEnvironment javacEnv = (JavacProcessingEnvironment) env;
 
         context = javacEnv.getContext();
@@ -455,5 +458,14 @@ public class Javac implements JavaCompiler {
     @Override
     public JCArrayAccess arrayAccess(JCExpression indexed, JCExpression index) {
         return make.Indexed(indexed, index);
+    }
+
+    @Override
+    public String getOption(String option) {
+        String ret = options.get(option);
+        if (ret == null) {
+            ret = System.getenv(option);
+        }
+        return ret;
     }
 }
