@@ -14,6 +14,7 @@ public interface Instrumenter {
         public static final String GHOSTWRITER_EXCLUDE_METHODS = "GHOSTWRITER_EXCLUDE_METHODS";
         public static final String GHOSTWRITER_INSTRUMENT = "GHOSTWRITER_INSTRUMENT";
         public static final String GHOSTWRITER_VERBOSE = "GHOSTWRITER_VERBOSE";
+        public static final String GHOSTWRITER_SHORT_METHOD_LIMIT = "GHOSTWRITER_SHORT_METHOD_LIMIT";
     }
 
     void initialize(ProcessingEnvironment processingEnv);

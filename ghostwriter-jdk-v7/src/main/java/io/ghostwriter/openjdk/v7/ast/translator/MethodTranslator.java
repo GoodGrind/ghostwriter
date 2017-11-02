@@ -23,6 +23,8 @@ public class MethodTranslator implements Translator<Method> {
 
     private final boolean doTraceReturning;
 
+    private final Integer shortMethodLimit;
+
     public MethodTranslator(JavaCompiler javac, JavaCompilerHelper helper) {
         this.javac = Objects.requireNonNull(javac, "Must provide a valid instance of " + JavaCompiler.class.getSimpleName());
         this.helper = Objects.requireNonNull(helper, "Must provide a valid instance of " + JavaCompilerHelper.class.getSimpleName());
@@ -41,6 +43,24 @@ public class MethodTranslator implements Translator<Method> {
         final String envReturning = javac.getOption(Instrumenter.Option.GHOSTWRITER_TRACE_RETURNING);
         this.doTraceReturning = envReturning == null ? true : Boolean.parseBoolean(envReturning);
         Logger.note(getClass(), "<init>", "instrument method returning tracing: " + doTraceReturning);
+
+
+        final String envShortMethodLimit = javac.getOption(Instrumenter.Option.GHOSTWRITER_SHORT_METHOD_LIMIT);
+        shortMethodLimit = envShortMethodLimit == null ? null : parseIntegerJavacArg(envShortMethodLimit, Instrumenter.Option.GHOSTWRITER_SHORT_METHOD_LIMIT);
+    }
+
+
+    private static int parseIntegerJavacArg(String argument, String argumentName) {
+        try {
+            return Integer.parseInt(argument);
+        }
+        catch(NumberFormatException e) {
+            throw new IllegalStateException("Invalid integer is provided for " + argumentName + ". value = " + argument);
+        }
+    }
+
+    private boolean isShortMethodLimitEnabled() {
+        return shortMethodLimit != null;
     }
 
     protected boolean doTraceValueChanges() {
@@ -89,9 +109,15 @@ public class MethodTranslator implements Translator<Method> {
     public void translate(Method model) {
         JCMethodDecl representation = model.representation();
 
-        boolean isDefined = representation.body != null;
+        JCTree.JCBlock body = representation.body;
+        boolean isDefined = body != null;
         if (!isDefined) {
             // abstract methods do not have a body for example, if no method body is present, we skip the instrumentation
+            return;
+        }
+
+        if (isShortMethodLimitEnabled() && body.getStatements().size() <= shortMethodLimit) {
+            // exclusion of methods with the number of statement not above the limit
             return;
         }
 
