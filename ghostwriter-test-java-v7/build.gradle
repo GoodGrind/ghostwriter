@@ -6,6 +6,7 @@ plugins {
 testSets {
     customMethodExcludeTest
     emtpyMethodExcludeTest
+    shortMethodLimitTest
 }
 
 dependencies {
@@ -28,5 +29,10 @@ compileEmtpyMethodExcludeTestJava {
     options.compilerArgs << '-AGHOSTWRITER_EXCLUDE_METHODS=""'
 }
 
+compileShortMethodLimitTestJava {
+    options.compilerArgs << '-AGHOSTWRITER_SHORT_METHOD_LIMIT=1'
+}
+
 check.dependsOn customMethodExcludeTest
 check.dependsOn emtpyMethodExcludeTest
+check.dependsOn shortMethodLimitTest
