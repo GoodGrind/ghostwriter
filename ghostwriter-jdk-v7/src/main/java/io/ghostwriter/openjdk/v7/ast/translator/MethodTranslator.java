@@ -5,6 +5,7 @@ import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
 import io.ghostwriter.openjdk.v7.ast.compiler.JavaCompiler;
 import io.ghostwriter.openjdk.v7.ast.compiler.JavaCompilerHelper;
+import io.ghostwriter.openjdk.v7.common.Instrumenter;
 import io.ghostwriter.openjdk.v7.common.Logger;
 import io.ghostwriter.openjdk.v7.model.Method;
 
@@ -26,18 +27,18 @@ public class MethodTranslator implements Translator<Method> {
         this.javac = Objects.requireNonNull(javac, "Must provide a valid instance of " + JavaCompiler.class.getSimpleName());
         this.helper = Objects.requireNonNull(helper, "Must provide a valid instance of " + JavaCompilerHelper.class.getSimpleName());
 
-        final String ENV_VALUE_CHANGE = "GHOSTWRITER_TRACE_VALUE_CHANGE";
-        final String envValueChange = System.getenv(ENV_VALUE_CHANGE);
+
+        final String envValueChange = javac.getOption(Instrumenter.Option.GHOSTWRITER_TRACE_VALUE_CHANGE);
         doTraceValueChanges = envValueChange == null ? true : Boolean.parseBoolean(envValueChange);
         Logger.note(getClass(), "<init>", "instrument value change tracing: " + doTraceValueChanges);
 
-        final String ENV_ON_ERROR = "GHOSTWRITER_TRACE_ON_ERROR";
-        final String envTraceError = System.getenv(ENV_ON_ERROR);
+
+        final String envTraceError = javac.getOption(Instrumenter.Option.GHOSTWRITER_TRACE_ON_ERROR);
         doTraceErrors = envTraceError == null ? true : Boolean.parseBoolean(envTraceError);
         Logger.note(getClass(), "<init>", "instrument value error tracing: " + doTraceErrors);
 
-        final String ENV_RETURNING = "GHOSTWRITER_TRACE_RETURNING";
-        final String envReturning = System.getenv(ENV_RETURNING);
+
+        final String envReturning = javac.getOption(Instrumenter.Option.GHOSTWRITER_TRACE_RETURNING);
         this.doTraceReturning = envReturning == null ? true : Boolean.parseBoolean(envReturning);
         Logger.note(getClass(), "<init>", "instrument method returning tracing: " + doTraceReturning);
     }

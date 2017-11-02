@@ -43,6 +43,10 @@ public class Javac7Instrumenter implements Instrumenter {
         setTrees(Trees.instance(processingEnv));
         setJavac(new Javac(processingEnv));
         setJavacHelper(new JavaCompilerHelper(javac));
+
+        Logger.initialize(processingEnv.getMessager(), Boolean.parseBoolean(javac.getOption(Option.GHOSTWRITER_VERBOSE)));
+        Logger.note(getClass(), "init", "beginning!");
+
         initializeFromEnv(processingEnv);
     }
 
@@ -53,11 +57,7 @@ public class Javac7Instrumenter implements Instrumenter {
     }
 
     protected final void initializeExcludedClasses(ProcessingEnvironment processingEnv) {
-        final String envExcludes = "GHOSTWRITER_EXCLUDE";
-        String rawExcludedNames = processingEnv.getOptions().get(envExcludes);
-        if (rawExcludedNames == null) {
-            rawExcludedNames = System.getenv(envExcludes);
-        }
+        String rawExcludedNames = javac.getOption(Option.GHOSTWRITER_EXCLUDE);
         if (rawExcludedNames != null) {
             for (String excludedName : rawExcludedNames.split("[\\s,]+")) {
                 if (excludedName.endsWith(".*")) { // exclusion of a package or of internal classes
@@ -68,15 +68,11 @@ public class Javac7Instrumenter implements Instrumenter {
                 }
             }
         }
-        Logger.note(getClass(),"initializeExcludedNames","GHOSTWRITER_EXCLUDE initialized to "+ this.excludedClasses);
+        Logger.note(getClass(),"initializeExcludedNames",Option.GHOSTWRITER_EXCLUDE + " initialized to "+ this.excludedClasses);
     }
 
     protected final void initializeExcludedMethodNames(ProcessingEnvironment processingEnv) {
-        final String envExcludeMethods = "GHOSTWRITER_EXCLUDE_METHODS";
-        String rawExcludedMethodNames = processingEnv.getOptions().get(envExcludeMethods);
-        if (rawExcludedMethodNames == null) {
-            rawExcludedMethodNames = System.getenv(envExcludeMethods);
-        }
+        String rawExcludedMethodNames = javac.getOption(Option.GHOSTWRITER_EXCLUDE_METHODS);
         if (rawExcludedMethodNames != null) {
             String[] names = rawExcludedMethodNames.split("[\\s,]+");
             excludedMethodNames.addAll(Arrays.asList(names));
@@ -89,11 +85,7 @@ public class Javac7Instrumenter implements Instrumenter {
     }
 
     protected final void initializeAnnotationOnlyMode(ProcessingEnvironment processingEnv) {
-        final String envAnnotatedOnly = "GHOSTWRITER_ANNOTATED_ONLY";
-        String rawEnvAnnotatedOnly = processingEnv.getOptions().get(envAnnotatedOnly);
-        if (rawEnvAnnotatedOnly == null) {
-            rawEnvAnnotatedOnly = System.getenv(envAnnotatedOnly);
-        }
+        final String rawEnvAnnotatedOnly = javac.getOption(Instrumenter.Option.GHOSTWRITER_ANNOTATED_ONLY);
         isAnnotatedOnlyMode = rawEnvAnnotatedOnly != null && Boolean.parseBoolean(rawEnvAnnotatedOnly);
         Logger.note(getClass(), "initializeAnnotationOnlyMode", "annotated only mode enabled: " + isAnnotatedOnlyMode);
     }
@@ -131,6 +123,12 @@ public class Javac7Instrumenter implements Instrumenter {
         // NOTE(snorbi07): IMPORTANT: this only does the processing of TOP LEVEL classes (class source files)!
         // Inner classes are part of the parent classes source tree and processed as such.
         processClass(klass);
+    }
+
+    @Override
+    public boolean doInstrument() {
+        final String doInstrument = javac.getOption(Option.GHOSTWRITER_INSTRUMENT);
+        return doInstrument == null ? true : Boolean.parseBoolean(doInstrument);
     }
 
     protected JCClassDecl toJCClassDecl(Element element) {

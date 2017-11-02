@@ -13,6 +13,14 @@ import java.util.Set;
 
 @SupportedAnnotationTypes("*")
 @SupportedSourceVersion(SourceVersion.RELEASE_7)
+@SupportedOptions({Instrumenter.Option.GHOSTWRITER_ANNOTATED_ONLY,
+        Instrumenter.Option.GHOSTWRITER_EXCLUDE,
+        Instrumenter.Option.GHOSTWRITER_TRACE_ON_ERROR,
+        Instrumenter.Option.GHOSTWRITER_TRACE_RETURNING,
+        Instrumenter.Option.GHOSTWRITER_TRACE_VALUE_CHANGE,
+        Instrumenter.Option.GHOSTWRITER_EXCLUDE_METHODS,
+        Instrumenter.Option.GHOSTWRITER_INSTRUMENT,
+        Instrumenter.Option.GHOSTWRITER_VERBOSE})
 public class GhostWriterAnnotationProcessor extends AbstractProcessor {
 
     // part of the Annotation processor API. Since GhostWriter just hijacks the processor pipeline
@@ -33,9 +41,6 @@ public class GhostWriterAnnotationProcessor extends AbstractProcessor {
     public synchronized void init(ProcessingEnvironment processingEnv) {
         super.init(processingEnv);
 
-        Logger.initialize(processingEnv.getMessager());
-        Logger.note(getClass(), "init", "beginning!");
-
         instrumenter.initialize(processingEnv);
     }
 
@@ -45,7 +50,7 @@ public class GhostWriterAnnotationProcessor extends AbstractProcessor {
             return NO_ANNOTATIONS_CLAIMED;
         }
 
-        if (!doInstrument()) {
+        if (!instrumenter.doInstrument()) {
             Logger.note(getClass(), "process", "skipping processing...");
             return NO_ANNOTATIONS_CLAIMED;
         }
@@ -60,12 +65,6 @@ public class GhostWriterAnnotationProcessor extends AbstractProcessor {
         }
 
         return NO_ANNOTATIONS_CLAIMED;
-    }
-
-    protected boolean doInstrument() {
-        final String ENV_INSTRUMENT = "GHOSTWRITER_INSTRUMENT";
-        final String envInstrument = System.getenv(ENV_INSTRUMENT);
-        return envInstrument == null ? true : Boolean.parseBoolean(envInstrument);
     }
 
 }
