@@ -5,7 +5,7 @@ allprojects {
     targetCompatibility = 1.7
 
     group = 'io.ghostwriter'
-    version = "0.7.0"
+    version = "0.7.1"
 
     // Dependency version information
     ext.ghostwriterApiVersion = "0.5.0"
