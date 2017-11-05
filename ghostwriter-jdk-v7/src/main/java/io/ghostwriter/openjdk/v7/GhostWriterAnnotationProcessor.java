@@ -20,7 +20,8 @@ import java.util.Set;
         Instrumenter.Option.GHOSTWRITER_TRACE_VALUE_CHANGE,
         Instrumenter.Option.GHOSTWRITER_EXCLUDE_METHODS,
         Instrumenter.Option.GHOSTWRITER_INSTRUMENT,
-        Instrumenter.Option.GHOSTWRITER_VERBOSE})
+        Instrumenter.Option.GHOSTWRITER_VERBOSE,
+        Instrumenter.Option.GHOSTWRITER_SHORT_METHOD_LIMIT})
 public class GhostWriterAnnotationProcessor extends AbstractProcessor {
 
     // part of the Annotation processor API. Since GhostWriter just hijacks the processor pipeline
