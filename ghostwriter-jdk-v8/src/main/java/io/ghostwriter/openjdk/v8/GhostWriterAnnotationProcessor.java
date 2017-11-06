@@ -17,7 +17,8 @@ import javax.lang.model.SourceVersion;
         Instrumenter.Option.GHOSTWRITER_TRACE_VALUE_CHANGE,
         Instrumenter.Option.GHOSTWRITER_EXCLUDE_METHODS,
         Instrumenter.Option.GHOSTWRITER_INSTRUMENT,
-        Instrumenter.Option.GHOSTWRITER_VERBOSE})
+        Instrumenter.Option.GHOSTWRITER_VERBOSE,
+        Instrumenter.Option.GHOSTWRITER_SHORT_METHOD_LIMIT})
 public class GhostWriterAnnotationProcessor extends io.ghostwriter.openjdk.v7.GhostWriterAnnotationProcessor {
 
     @Exclude
