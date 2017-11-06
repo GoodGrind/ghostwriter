@@ -9,7 +9,7 @@ endif::[]
 = GhostWriter
 Norbert Sram
 :toc: macro
-:version: 0.7.1
+:version: 0.7.2
 
 image:https://travis-ci.org/GoodGrind/ghostwriter.svg?branch=master["Build Status", link="https://travis-ci.org/GoodGrind/ghostwriter"]
 image:https://maven-badges.herokuapp.com/maven-central/io.ghostwriter/ghostwriter-jdk-v8/badge.svg["Maven Central", link="http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22io.ghostwriter%22%20v%3A{version}"]
