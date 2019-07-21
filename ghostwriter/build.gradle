@@ -1,0 +1,23 @@
+apply plugin: 'java'
+apply plugin: "maven-publish"
+
+group = 'io.ghostwriter'
+version = "0.8.0"
+
+
+repositories {
+	mavenLocal()
+	mavenCentral()
+}
+
+dependencies {
+	implementation "hu.advancedweb:scott:3.5.0"
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+}
