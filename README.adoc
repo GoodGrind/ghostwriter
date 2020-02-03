@@ -11,8 +11,8 @@ Norbert Sram
 :toc: macro
 :version: 0.7.2
 
-image:https://travis-ci.org/GoodGrind/ghostwriter.svg?branch=master["Build Status", link="https://travis-ci.org/GoodGrind/ghostwriter"]
-image:https://maven-badges.herokuapp.com/maven-central/io.ghostwriter/ghostwriter-jdk-v8/badge.svg["Maven Central", link="http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22io.ghostwriter%22%20v%3A{version}"]
+Latest: image:https://maven-badges.herokuapp.com/maven-central/io.ghostwriter/ghostwriter/badge.svg["Maven Central", link="http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22io.ghostwriter%22%20v%3A{version}"]
+Legacy: image:https://maven-badges.herokuapp.com/maven-central/io.ghostwriter/ghostwriter-jdk-v8/badge.svg["Maven Central", link="http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22io.ghostwriter%22%20v%3A{version}"]
 image:https://img.shields.io/badge/license-LGPLv2.1-blue.svg?style=flat["License", link="http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html"]
 image:https://api.codacy.com/project/badge/Grade/c4506e0b2280433490ec6c23cbb36c0f["Codacy code quality", link="https://www.codacy.com/app/snorbi07/ghostwriter-instrumenter?utm_source=github.com&utm_medium=referral&utm_content=GoodGrind/ghostwriter-instrumenter&utm_campaign=Badge_Grade"]
 image:https://badges.gitter.im/Join%20Chat.svg["Gitter",link="https://gitter.im/snorbi07/GhostWriter?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge"]
@@ -29,11 +29,6 @@ GhostWriter helps people to reason about their application, catch and pinpoint b
 See GhostWriter with the tracer runtime in action:
 image:https://asciinema.org/a/132098.png["Tracer in action", link="https://asciinema.org/a/132098"]
 
-*Providing better exceptions*
-
-Providing a snapshot of the application state alongside the stacktrace for those pesky bugs:
-
-Screencast and extended documentation coming soon...
 
 == How does it work?
 GhostWriter takes a different approach of debugging and bug tracking by writing code instead of you at the creation of the application. When you launch the GhostWriter-augmented final product it catches unexpected errors, tracks variable states and method calls so you or your team can see what's the problem but more importantly, _why_ is it happening. You can attach any application or tool to the interface of the application and receive the messages that GhostWriter creates.
@@ -69,8 +64,8 @@ First, add a tracing as a runtime dependency:
 [source, subs="verbatim,attributes"]
 ----
 dependencies {
-    runtime 'io.ghostwriter:ghostwriter-rt-tracer:0.4.0-scott'
-    runtime 'io.ghostwriter:ghostwriter-rt-tracer-slf4j:0.4.0-scott' // Include this as well for SLF4J based logging.
+    runtime 'io.ghostwriter:ghostwriter-rt-tracer:0.5.0'
+    runtime 'io.ghostwriter:ghostwriter-rt-tracer-slf4j:0.5.0' // Include this as well for SLF4J based logging.
 }
 ----
 
@@ -96,7 +91,7 @@ compileJava.finalizedBy instrument
 For all configuration options, see <<conf-o>> .
 
 
-== GhostWriter Annotation Processor
+== GhostWriter Annotation Processor (Legacy, supports Java 8 and Java 7 only)
 
 IMPORTANT: You have to choose the dependency that is inline with your Java compiler (JDK) version.
 
