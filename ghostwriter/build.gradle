@@ -2,7 +2,7 @@ apply plugin: 'java'
 apply plugin: "maven-publish"
 
 group = 'io.ghostwriter'
-version = "0.8.0"
+version = "0.8.1"
 
 
 repositories {
@@ -11,7 +11,7 @@ repositories {
 }
 
 dependencies {
-	implementation "hu.advancedweb:scott:3.5.0"
+	implementation "hu.advancedweb:scott:4.0.1"
 }
 
 publishing {
